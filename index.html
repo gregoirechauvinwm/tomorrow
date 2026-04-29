@@ -24,7 +24,8 @@
   nav { position: sticky; top: 0; z-index: 100; background: #0a0a0a; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0 5%; display: flex; align-items: center; justify-content: space-between; height: 52px; }
   .nav-logo img { height: 44px; width: auto; display: block; }
   .nav-logo { font-family: var(--serif); font-size: 22px; letter-spacing: -0.5px; color: var(--charcoal); }
-  .nav-cta { background: #6475ff; color: #ffffff; border: none; padding: 10px 22px; border-radius: 100px; font-size: 14px; cursor: pointer; font-family: var(--sans); transition: background 0.2s; position: relative; overflow: hidden; }
+  .nav-cta { background: #ffffff; color: #0a0a0a; border: none; padding: 10px 22px; border-radius: 100px; font-size: 14px; cursor: pointer; font-family: var(--sans); transition: background 0.2s; position: relative; overflow: hidden; }
+  .nav-cta:hover { background: rgba(255,255,255,0.85); }
   .nav-cta:hover { background: var(--terracotta); }
   .nav-cta-label-short { display: none; }
   @media (max-width: 600px) {
@@ -55,9 +56,9 @@
   .hero h1 em {
     font-style: italic;
     color: var(--terracotta);
-    background: rgba(100,117,255,0.12);
-    border-radius: 6px;
-    padding: 0 8px;
+    background: rgb(0 0 0 / 30%);
+    border-radius: 0px;
+    padding: 4px 0px;
     margin: 0 -8px;
   }
   .hero-sub { font-size: 18px; color: var(--muted); max-width: 520px; margin: 0 auto 28px; line-height: 1.4; }
@@ -527,10 +528,10 @@
     <p class="hero-sub" style="font-family:var(--serif);font-style:italic;font-weight:400;color:rgba(255,255,255,0.7);">Be foolish. Fall in love.</p>
     <button class="btn-primary" onclick="window.location.href='form.html'" style="margin-bottom:48px;">Request an invite</button>
     <div class="hero-note">
-      <div class="hero-location" style="color:rgba(255,255,255,0.5);">
+      <div class="hero-location" style="color:rgba(255,255,255,0.9);">
         Next dating session
-        <span style="margin:0 3px;opacity:0.4;">·</span>
-        <svg width="13" height="13" viewBox="0 0 512 512" fill="currentColor" style="flex-shrink:0;opacity:0.6;"><path d="M416,405.333h-10.667v-74.667c0-5.888-4.779-10.667-10.667-10.667h-32v-53.333c0-5.888-4.779-10.667-10.667-10.667h-16.939l-36.395-36.395v-48.939c0-15.872-8.811-29.589-21.717-36.949L266.624,9.771C266.176,4.245,261.547,0,256,0s-10.176,4.245-10.624,9.771l-10.325,123.947c-12.907,7.36-21.717,21.077-21.717,36.949v48.896L176.896,256H160c-5.888,0-10.667,4.779-10.667,10.667V320h-32c-5.888,0-10.667,4.779-10.667,10.667v74.667H96c-5.888,0-10.667,4.779-10.667,10.667v85.333C85.333,507.221,90.112,512,96,512s10.667-4.779,10.667-10.667v-74.667h106.667v74.667c0,5.888,4.779,10.667,10.667,10.667s10.667-4.779,10.667-10.667v-160h42.667v160c0,5.888,4.779,10.667,10.667,10.667s10.667-4.779,10.667-10.667v-74.667h106.667v74.667c0,5.888,4.779,10.667,10.667,10.667c5.888,0,10.667-4.779,10.667-10.667V416C426.667,410.112,421.888,405.333,416,405.333z M234.667,170.667c0-11.776,9.579-21.333,21.333-21.333s21.333,9.557,21.333,21.333v42.688h-42.667V170.667z M228.395,234.667h55.168L304.896,256h-97.835L228.395,234.667z M213.333,405.333H128v-64h85.333V405.333z M170.667,320v-42.667h10.603c0.021,0,0.043,0,0.064,0h160V320H170.667z M384,405.333h-85.333v-64H384V405.333z"/></svg>
+        <span style="margin:0 3px;opacity:0.6;">·</span>
+        <svg width="13" height="13" viewBox="0 0 512 512" fill="currentColor" style="flex-shrink:0;opacity:0.9;"><path d="M416,405.333h-10.667v-74.667c0-5.888-4.779-10.667-10.667-10.667h-32v-53.333c0-5.888-4.779-10.667-10.667-10.667h-16.939l-36.395-36.395v-48.939c0-15.872-8.811-29.589-21.717-36.949L266.624,9.771C266.176,4.245,261.547,0,256,0s-10.176,4.245-10.624,9.771l-10.325,123.947c-12.907,7.36-21.717,21.077-21.717,36.949v48.896L176.896,256H160c-5.888,0-10.667,4.779-10.667,10.667V320h-32c-5.888,0-10.667,4.779-10.667,10.667v74.667H96c-5.888,0-10.667,4.779-10.667,10.667v85.333C85.333,507.221,90.112,512,96,512s10.667-4.779,10.667-10.667v-74.667h106.667v74.667c0,5.888,4.779,10.667,10.667,10.667s10.667-4.779,10.667-10.667v-160h42.667v160c0,5.888,4.779,10.667,10.667,10.667s10.667-4.779,10.667-10.667v-74.667h106.667v74.667c0,5.888,4.779,10.667,10.667,10.667c5.888,0,10.667-4.779,10.667-10.667V416C426.667,410.112,421.888,405.333,416,405.333z M234.667,170.667c0-11.776,9.579-21.333,21.333-21.333s21.333,9.557,21.333,21.333v42.688h-42.667V170.667z M228.395,234.667h55.168L304.896,256h-97.835L228.395,234.667z M213.333,405.333H128v-64h85.333V405.333z M170.667,320v-42.667h10.603c0.021,0,0.043,0,0.064,0h160V320H170.667z M384,405.333h-85.333v-64H384V405.333z"/></svg>
         NYC
       </div>
       <div class="hero-timer" id="heroTimer" style="color:white;">
@@ -911,19 +912,25 @@ function toggleFaq(el) {
 (function() {
   function getNext8pmEST() {
     const now = new Date();
-    const estString = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
-    const estNow = new Date(estString);
 
-    const target = new Date(estNow);
-    target.setHours(20, 0, 0, 0);
+    // Get current time in EST as a proper Date using Intl
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York',
+      hour: 'numeric', minute: 'numeric', second: 'numeric',
+      hour12: false, year: 'numeric', month: 'numeric', day: 'numeric'
+    });
+    const parts = formatter.formatToParts(now);
+    const get = (type) => parseInt(parts.find(p => p.type === type).value);
+    const estHour = get('hour'), estMin = get('minute'), estSec = get('second');
 
-    // If 8PM already passed today, target tomorrow
-    if (estNow >= target) {
-      target.setDate(target.getDate() + 1);
-    }
+    // Seconds until next 8PM EST
+    const secondsInDay = 86400;
+    const target8pm = 20 * 3600;
+    const currentSeconds = estHour * 3600 + estMin * 60 + estSec;
+    let secsUntil = target8pm - currentSeconds;
+    if (secsUntil <= 0) secsUntil += secondsInDay;
 
-    const diff = target.getTime() - estNow.getTime();
-    return now.getTime() + diff;
+    return now.getTime() + secsUntil * 1000;
   }
 
   function pad(n) { return String(n).padStart(2, '0'); }
@@ -1076,32 +1083,18 @@ const pbMobileObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.15 });
 document.querySelectorAll('.pb-mobile-card').forEach(c => pbMobileObserver.observe(c));
 
-let testiIndex = 0;
-function testiScroll(dir) {
-  const track = document.getElementById('testiTrack');
-  const cards = track.querySelectorAll('.testi-card');
-  const cardWidth = cards[0].getBoundingClientRect().width + 20;
-  const max = cards.length - 1;
-  testiIndex = Math.max(0, Math.min(testiIndex + dir, max));
-  track.style.transform = `translateX(-${testiIndex * cardWidth}px)`;
-}
 // ── Pola strip: scroll-driven horizontal movement ──
 (function() {
   const track = document.querySelector('.pola-track');
   if (!track) return;
-
-  const totalWidth = track.scrollWidth / 2; // half because images are duplicated
-  let offset = 0;
-
   window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    // Move 0.4px per scroll pixel, capped to loop seamlessly
-    offset = (scrollY * 0.4) % totalWidth;
+    const totalWidth = track.scrollWidth / 2;
+    const offset = (window.scrollY * 0.4) % totalWidth;
     track.style.transform = `translateX(-${offset}px)`;
   }, { passive: true });
 })();
 
-
+const stepObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
