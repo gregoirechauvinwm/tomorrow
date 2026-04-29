@@ -414,10 +414,11 @@
   .faq-a.open { max-height: 600px; padding-bottom: 24px; }
 
   .cta-final { background: var(--charcoal); text-align: center; }
-  .cta-final h2 { font-family: var(--serif); font-size: clamp(28px, 4vw, 48px); font-weight: 400; color: white; margin-bottom: 20px; letter-spacing: -0.5px; }
+  .cta-final h2 { font-family: var(--serif); font-size: clamp(28px, 4vw, 48px); font-weight: 400; color: white; margin-bottom: 16px; letter-spacing: -0.5px; }
   .cta-final h2 em { color: #7FBD97; font-style: italic; }
-  .cta-final p { font-size: 16px; color: rgba(255,255,255,0.5); margin-bottom: 40px; }
+  .cta-final p { font-size: 16px; color: rgba(255,255,255,0.5); margin-bottom: 32px; }
   .cta-note { margin-top: 16px; font-size: 13px; color: rgba(255,255,255,0.3); }
+  ::placeholder { color: rgba(255,255,255,0.4); }
 
   footer {
     background: var(--charcoal);
@@ -435,37 +436,115 @@
   .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
   .footer-bottom p { font-size: 13px; color: rgba(255,255,255,0.3); }
   .footer-email { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
-  .footer-email:hover { color: white; }
+  .nav-belief {
+    background: transparent;
+    color: var(--charcoal);
+    border: 1.5px solid var(--border);
+    padding: 10px 22px;
+    border-radius: 100px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: var(--sans);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .nav-belief:hover { background: var(--warm); border-color: var(--charcoal); }
+
+  .belief-modal-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(26,46,34,0.55);
+    align-items: center; justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .belief-modal-overlay.open { display: flex; }
+  .belief-modal {
+    background: var(--terra-dark);
+    color: rgba(255,255,255,0.85);
+    border-radius: 20px;
+    padding: 48px;
+    max-width: 620px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    font-size: 17px;
+    line-height: 1.75;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .belief-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,0.12); border: none;
+    color: white; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+    transition: background 0.2s;
+  }
+  .belief-close:hover { background: rgba(255,255,255,0.22); }
+  @media (max-width: 600px) {
+    .belief-modal { padding: 32px 24px; font-size: 15px; }
+    .nav-belief { display: none; }
+  }
 </style>
 </head>
 <body>
 
 <nav>
   <div class="nav-logo"><img src="images/logo.png" alt="amata"></div>
-  <button class="nav-cta" onclick="window.location.href='form.html'"><span class="nav-cta-label-full">Apply to the program</span><span class="nav-cta-label-short">Apply</span></button>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <button class="nav-belief" onclick="document.getElementById('beliefModal').classList.add('open')">Our belief</button>
+    <button class="nav-cta" onclick="window.location.href='form.html'"><span class="nav-cta-label-full">Request an invite →</span><span class="nav-cta-label-short">Apply</span></button>
+  </div>
 </nav>
 
+<!-- Our Belief Modal -->
+<div id="beliefModal" class="belief-modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="belief-modal">
+    <button class="belief-close" onclick="document.getElementById('beliefModal').classList.remove('open')">×</button>
+    <p style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:28px;">Our Belief</p>
+    <p>At Amata, we believe that we — humans — are not the best to decide who we should go on a date with. Because attraction — especially based on pictures — and compatibility are two different things, and <strong>our brain isn't wired to tell them apart.</strong></p>
+    <p>We've been swiping for fifteen years. We've optimized our profiles, refined our bios, and curated our best photos. We've made checklists of what we want. And yet, here we are.</p>
+    <p><strong>The problem was never the apps. It was never the swipe. It was us.</strong></p>
+    <p>The data is brutal: research shows that what people say they want in a partner has almost nothing to do with who they actually fall for. Chemistry doesn't live in a photo. Compatibility doesn't reveal itself in a bio. Both only emerge in person — across from someone you might never have chosen based on a picture.</p>
+    <p>So why keep swiping and chatting for hours when you could go on a date tomorrow with someone worth meeting?</p>
+    <p>Amata takes the choice away — on purpose — with an AI trained on thousands of real dates, real debriefs, and real connections. <strong>An AI that knows you better than your checklist does.</strong></p>
+    <p>This takes courage. It means letting go of control. It means trusting a process over your swiping instincts.</p>
+    <p>But every great love story starts with a leap.</p>
+    <p style="font-family:var(--serif);font-style:italic;color:#7FBD97;margin-top:8px;">Be foolish. Fall in love.</p>
+  </div>
+</div>
+
 <div class="hero-wrap">
-<section class="hero">
-  <div class="container">
-    <h1>6 blind dates.<br>One <em>mutual spark.</em><br>Guaranteed.</h1>
-    <p class="hero-sub">Get matched with 6 highly compatible people carefully curated by your AI matchmaker. No swiping, no planning.<br>All you have to do is show up.</p>
-    <button class="btn-primary" onclick="window.location.href='form.html'" style="margin-bottom:48px;">Meet your matches</button>
+<section class="hero" style="position:relative;">
+  <!-- Video background -->
+  <video autoplay muted loop playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
+    <source src="nyc.mp4" type="video/mp4">
+  </video>
+  <!-- Dark overlay -->
+  <div style="position:absolute;inset:0;background:rgba(10,20,14,0.55);z-index:1;"></div>
+  <div class="container" style="position:relative;z-index:2;">
+    <div style="display:inline-block;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.8);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:6px 18px;border-radius:100px;margin-bottom:32px;">The next chapter of Amata</div>
+    <h1 style="color:white;">A blind date<br>with someone <em>great.</em><br>Tomorrow.</h1>
+    <p class="hero-sub" style="font-family:var(--serif);font-style:italic;font-weight:400;color:rgba(255,255,255,0.7);">Be foolish. Fall in love.</p>
+    <button class="btn-primary" onclick="window.location.href='form.html'" style="margin-bottom:48px;">Request an invite</button>
     <div class="hero-note">
-      <div class="hero-location">
+      <div class="hero-location" style="color:rgba(255,255,255,0.5);">
         Next dating session
-        <span style="color:var(--border);margin:0 3px;">·</span>
+        <span style="margin:0 3px;opacity:0.4;">·</span>
         <svg width="13" height="13" viewBox="0 0 512 512" fill="currentColor" style="flex-shrink:0;opacity:0.6;"><path d="M416,405.333h-10.667v-74.667c0-5.888-4.779-10.667-10.667-10.667h-32v-53.333c0-5.888-4.779-10.667-10.667-10.667h-16.939l-36.395-36.395v-48.939c0-15.872-8.811-29.589-21.717-36.949L266.624,9.771C266.176,4.245,261.547,0,256,0s-10.176,4.245-10.624,9.771l-10.325,123.947c-12.907,7.36-21.717,21.077-21.717,36.949v48.896L176.896,256H160c-5.888,0-10.667,4.779-10.667,10.667V320h-32c-5.888,0-10.667,4.779-10.667,10.667v74.667H96c-5.888,0-10.667,4.779-10.667,10.667v85.333C85.333,507.221,90.112,512,96,512s10.667-4.779,10.667-10.667v-74.667h106.667v74.667c0,5.888,4.779,10.667,10.667,10.667s10.667-4.779,10.667-10.667v-160h42.667v160c0,5.888,4.779,10.667,10.667,10.667s10.667-4.779,10.667-10.667v-74.667h106.667v74.667c0,5.888,4.779,10.667,10.667,10.667c5.888,0,10.667-4.779,10.667-10.667V416C426.667,410.112,421.888,405.333,416,405.333z M234.667,170.667c0-11.776,9.579-21.333,21.333-21.333s21.333,9.557,21.333,21.333v42.688h-42.667V170.667z M228.395,234.667h55.168L304.896,256h-97.835L228.395,234.667z M213.333,405.333H128v-64h85.333V405.333z M170.667,320v-42.667h10.603c0.021,0,0.043,0,0.064,0h160V320H170.667z M384,405.333h-85.333v-64H384V405.333z"/></svg>
         NYC
       </div>
-      <div class="hero-timer" id="heroTimer">
-        <div class="hero-timer-unit"><span id="timerDays">00</span><span class="hero-timer-sub">days</span></div>
-        <span class="hero-timer-sep">:</span>
-        <div class="hero-timer-unit"><span id="timerHours">00</span><span class="hero-timer-sub">hours</span></div>
-        <span class="hero-timer-sep">:</span>
-        <div class="hero-timer-unit"><span id="timerMins">00</span><span class="hero-timer-sub">min</span></div>
-        <span class="hero-timer-sep">:</span>
-        <div class="hero-timer-unit"><span id="timerSecs">00</span><span class="hero-timer-sub">sec</span></div>
+      <div class="hero-timer" id="heroTimer" style="color:white;">
+        <div class="hero-timer-unit"><span id="timerDays" style="color:white;">00</span><span class="hero-timer-sub" style="color:rgba(255,255,255,0.5);">days</span></div>
+        <span class="hero-timer-sep" style="color:rgba(255,255,255,0.4);">:</span>
+        <div class="hero-timer-unit"><span id="timerHours" style="color:white;">00</span><span class="hero-timer-sub" style="color:rgba(255,255,255,0.5);">hours</span></div>
+        <span class="hero-timer-sep" style="color:rgba(255,255,255,0.4);">:</span>
+        <div class="hero-timer-unit"><span id="timerMins" style="color:white;">00</span><span class="hero-timer-sub" style="color:rgba(255,255,255,0.5);">min</span></div>
+        <span class="hero-timer-sep" style="color:rgba(255,255,255,0.4);">:</span>
+        <div class="hero-timer-unit"><span id="timerSecs" style="color:white;">00</span><span class="hero-timer-sub" style="color:rgba(255,255,255,0.5);">sec</span></div>
       </div>
     </div>
   </div>
@@ -495,41 +574,10 @@
 </div>
 </div>
 
-<section class="insight">
-  <div class="container-sm">
-    <img src="images/ludovic.png" alt="Ludovic Huraux" style="width:120px;height:120px;border-radius:50%;display:block;margin:0 auto 32px;object-fit:cover;">
-    <p class="insight-quote">"The reason you're still single isn't the apps. It's that you've been choosing <em>the wrong people</em> — and no one ever told you."</p>
-    <p style="font-size:14px;color:var(--muted);margin-top:16px;">Ludovic Huraux, Co-founder of Amata</p>
-    <div class="divider"></div>
-    <p class="insight-body">Every app gives you more choices. Amata takes the choice away — on purpose. We believe a deeply informed AI, trained on real compatibility signals and honest date debriefs, is better at deciding who you should meet than you are. Not because you're flawed. Because attraction — especially based on pictures — and compatibility are two different things, and your brain isn't wired to tell them apart.</p>
-  </div>
-</section>
-
-<section style="background:var(--cream);padding:72px 5% 0;">
-  <div class="container">
-    <div class="science-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
-      <!-- Desktop: cafe.png | Mobile: cafe2.png, shown first via order -->
-      <picture style="width:100%;display:block;order:0;">
-        <source media="(max-width:600px)" srcset="images/cafe2.png">
-        <img src="images/cafe.png" alt="" style="width:100%;border-radius:20px;display:block;">
-      </picture>
-      <div style="order:1;">
-        <p class="section-label">The science behind it</p>
-        <h2 class="section-title">Your brain isn't wired to choose the right person.</h2>
-        <p style="font-size:15px;color:var(--muted);margin-bottom:24px;">This isn't an opinion. It's peer-reviewed research.</p>
-        <p style="font-size:16px;color:var(--muted);line-height:1.8;">In 2024, UC Davis professor Paul Eastwick led a team of 70 researchers across a worldwide study of 10,358 people to answer one question: do people's stated partner preferences actually predict who they fall for?</p>
-        <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-top:16px;">The answer was clear: <strong style="color:var(--charcoal);">almost never.</strong></p>
-        <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-top:8px;">The traits people list as must-haves barely move the needle in real relationships. What actually drives attraction only reveals itself in person, through real interaction. Not through a profile. Not through a photo.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section id="how">
   <div class="container">
     <p class="section-label">How it works</p>
-    <h2 class="section-title">Six weeks. 6 blind dates. One spark guaranteed.</h2>
-    <p class="section-sub">Every step is designed to get better as it goes — the more you debrief, the smarter your matches get.</p>
+    <h2 class="section-title">Sign up today, date tomorrow.</h2>
     <div class="pola-strip">
       <div class="pola-track">
         <img src="images/pola-1.jpg" alt=""><img src="images/pola-2.jpg" alt=""><img src="images/pola-3.jpg" alt=""><img src="images/pola-4.jpg" alt=""><img src="images/pola-5.jpg" alt=""><img src="images/pola-6.jpg" alt=""><img src="images/pola-7.jpg" alt=""><img src="images/pola-8.jpg" alt=""><img src="images/pola-9.jpg" alt=""><img src="images/pola-10.jpg" alt=""><img src="images/pola-11.jpg" alt=""><img src="images/pola-12.jpg" alt="">
@@ -543,9 +591,9 @@
           <div class="step-line"></div>
         </div>
         <div class="step-content">
-          <div class="step-tag">Before you begin</div>
-          <div class="step-title">Commit to the program</div>
-          <p class="step-desc">Pay $120 upfront and choose 6 Tuesdays from 9 available slots. No browsing profiles, no swiping, no second-guessing. You just trust the process.</p>
+          <div class="step-tag">Today 9am → 7pm</div>
+          <div class="step-title">Sign up</div>
+          <p class="step-desc">Your AI matchmaker gets to know you deeply — your personality, your history, your preferences, and what you're really looking for. It's a conversation, not a form. It will also show you photos of other members to understand your physical preferences. Then RSVP for your blind date tomorrow by 7PM.</p>
         </div>
       </div>
       <div class="step">
@@ -554,9 +602,9 @@
           <div class="step-line"></div>
         </div>
         <div class="step-content">
-          <div class="step-tag">Day 1 - 3</div>
-          <div class="step-title">Three days of AI coaching</div>
-          <p class="step-desc">Your AI matchmaker gets to know you — your history, personality, goals, and what truly matters. This isn't a questionnaire. It's a conversation. It will also show you photos of participants in the program to understand your physical preferences. By day three, it understands what you really need in your love life better than most of your friends do.</p>
+          <div class="step-tag">Tonight 8pm</div>
+          <div class="step-title">We confirm — or not</div>
+          <p class="step-desc">Compatibility above 70%? Your date is on. Below that? We'll rematch tomorrow if you're up to it.</p>
         </div>
       </div>
       <div class="step">
@@ -565,9 +613,9 @@
           <div class="step-line"></div>
         </div>
         <div class="step-content">
-          <div class="step-tag">Every Tuesday at 8pm</div>
-          <div class="step-title">Your blind date</div>
-          <p class="step-desc">You don't know who you're meeting. You don't see a photo. You show up to a table we've booked and meet someone your AI matchmaker selected specifically for you. The evening before, we send one message sharing their name, the place, your compatibility score, and a fun anecdote you both relate to.</p>
+          <div class="step-tag">Tomorrow morning</div>
+          <div class="step-title">The reveal</div>
+          <p class="step-desc">Their first name. The bar. Your compatibility score. One thing you both relate to. That's it.</p>
         </div>
       </div>
       <div class="step">
@@ -576,9 +624,9 @@
           <div class="step-line"></div>
         </div>
         <div class="step-content">
-          <div class="step-tag">Wednesday morning</div>
-          <div class="step-title">The debrief that improves everything</div>
-          <p class="step-desc">After each date, your AI asks you what happened. Not just "did you like them" — it goes deeper. Every debrief sharpens the next match. By date three, your matchmaker knows things about your chemistry that most people don't for themselves. If you don't have a mutual spark after our 6 blind dates series, we rematch you until you do.</p>
+          <div class="step-tag">Tomorrow 8pm</div>
+          <div class="step-title">You show up</div>
+          <p class="step-desc">A table. Someone chosen for you. The rest is yours.</p>
         </div>
       </div>
       <div class="step">
@@ -587,72 +635,26 @@
           <div class="step-line"></div>
         </div>
         <div class="step-content">
-          <div class="step-tag">After the program</div>
-          <div class="step-title">Join the Amata community</div>
-          <p class="step-desc">Become a member of the Amata Matchmaking Club — monthly matchmaking events, ongoing AI coaching, and a community of people who date the same way you now do.</p>
+          <div class="step-tag">The morning after</div>
+          <div class="step-title">The debrief that improves everything</div>
+          <p class="step-desc">After each date, your AI asks you what happened. Not just "did you like them" — it goes deeper. Every debrief sharpens the next match. By date three, your matchmaker knows things about your chemistry that most people don't for themselves.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left">
+          <div class="step-num">6</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-tag">After your third date</div>
+          <div class="step-title">Become a member of the Amata Matchmaking Club</div>
+          <p class="step-desc">Join officially the Amata Matchmaking Club. Weekly matchmaking events, perks, and a community of people who date the same way you do now.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-
-<section class="guarantee" style="overflow:hidden;">
-  <div class="container">
-    <p class="section-label">Our promise</p>
-    <p class="section-sub">No app has ever guaranteed you anything. We do.</p>
-    <div class="g-box" style="position:relative;padding-bottom:100px;">
-      <p class="g-promise">At least <em>one mutual spark</em> out of your six dates. Or we keep going.</p>
-      <p class="g-detail">Complete 5 of your 6 scheduled dates and we guarantee that at least one match will want to see you again — and so will you. If that doesn't happen, we rematch you at no extra cost, up to 12 blind dates total.</p>
-      <img src="images/card.png" alt="Warranty Certificate" style="
-        position: absolute;
-        bottom: -80px;
-        right: -20px;
-        width: 220px;
-        transform: rotate(8deg);
-        pointer-events: none;
-      ">
-    </div>
-  </div>
-</section>
-
-<section class="rules">
-  <div class="container">
-    <p class="section-label">The commitment</p>
-    <h2 class="section-title">This works because everyone plays by the same rules.</h2>
-    <p class="section-sub" style="margin-bottom:40px;">Amata is a community of intentional daters who want to reshape the modern dating culture. The quality of your experience depends on everyone's commitment.</p>
-    <div class="rules-grid">
-      <div class="rule-card"><div class="rule-label">Cancellations</div><p class="rule-text">Cancel with 24+ hours notice and we'll rematch you — up to three times. A fourth cancellation counts as last-minute.</p></div>
-      <div class="rule-card"><div class="rule-label">Last-minute cancel</div><p class="rule-text">Cancelling under 24 hours forfeits that date slot. It's part of the commitment you made to your match.</p></div>
-      <div class="rule-card"><div class="rule-label">No-shows</div><p class="rule-text">Not showing up means immediate removal from the program, with no refund. This protects everyone in the community.</p></div>
-      <div class="rule-card"><div class="rule-label">The debrief</div><p class="rule-text">After each date, your AI matchmaker needs to hear from you. Honest debriefs make every next match better — for you and others.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="pricing" id="pricing">
-  <div class="container">
-    <p class="section-label" style="text-align:center;">Pricing</p>
-    <h2 class="section-title" style="text-align:center;">One simple price.</h2>
-    <p class="section-sub" style="margin:0 auto 48px;text-align:center;">Everything included. No hidden fees. Just show up.</p>
-    <div class="pricing-card">
-      <div style="display:inline-block;background:var(--terra-light);color:var(--terra-dark);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:20px;">1,000 spots only</div>
-      <div style="display:flex;align-items:baseline;gap:12px;justify-content:center;">
-        <div class="price-amount">$120</div>
-      </div>
-      <p class="price-note">Full 6-week Amata Blind Dates program</p>
-      <div class="price-features">
-        <div class="price-feat"><span class="price-feat-dot"></span>6 curated blind dates</div>
-        <div class="price-feat"><span class="price-feat-dot"></span>Tailored AI matching journey</div>
-        <div class="price-feat"><span class="price-feat-dot"></span>Pre-date debrief</div>
-        <div class="price-feat"><span class="price-feat-dot"></span>Unlimited AI coaching</div>
-        <div class="price-feat"><span class="price-feat-dot"></span>Mutual spark guarantee — or we rematch</div>
-        <div class="price-feat"><span class="price-feat-dot"></span>Access to graduation community</div>
-      </div>
-      <button class="btn-primary" style="width:100%;padding:18px;" onclick="window.location.href='form.html'">Start my program today →</button>
-    </div>
-  </div>
-</section>
 
 <section style="background:var(--warm);padding:48px 0 100px 5%;overflow:hidden;">
   <div>
@@ -923,9 +925,13 @@
 
 <section class="cta-final">
   <div class="container-sm">
-    <h2>Ready to stop choosing <em>the wrong people</em>?</h2>
-    <button class="btn-primary" style="font-size:17px;padding:18px 44px;" onclick="window.location.href='form.html'">Start my program today →</button>
-    <p class="cta-note">New York City only · Limited spots per cohort</p>
+    <h2>Free <em>tomorrow</em> night?</h2>
+    <p>Request an invite. We'll take it from there.</p>
+    <div style="display:flex;gap:0;max-width:520px;margin:0 auto 16px;background:rgba(255,255,255,0.08);border-radius:100px;padding:6px;">
+      <input type="email" placeholder="Your email address" style="flex:1;background:transparent;border:none;outline:none;padding:12px 20px;font-size:15px;color:white;font-family:var(--sans);" oninput="this.style.color='white'" />
+      <button class="btn-primary" style="padding:14px 28px;font-size:15px;white-space:nowrap;" onclick="window.location.href='form.html'">Request an invite</button>
+    </div>
+    <p class="cta-note">Limited spots</p>
   </div>
 </section>
 
