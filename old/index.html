@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amata Spark Series</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #F8F5EE;
+    --warm: #EEE9DF;
+    --terracotta: #3D6B4F;
+    --terra-light: #E2EDE6;
+    --terra-dark: #1E4030;
+    --charcoal: #1A2E22;
+    --muted: #5A6B60;
+    --border: rgba(26,46,34,0.12);
+    --serif: Georgia, 'Times New Roman', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--cream); color: var(--charcoal); line-height: 1.6; }
+
+  nav { position: sticky; top: 0; z-index: 100; background: var(--cream); border-bottom: 1px solid var(--border); padding: 0 5%; display: flex; align-items: center; justify-content: space-between; height: 52px; }
+  .nav-logo img { height: 44px; width: auto; display: block; }
+  .nav-logo { font-family: var(--serif); font-size: 22px; letter-spacing: -0.5px; color: var(--charcoal); }
+  .nav-cta { background: var(--charcoal); color: var(--cream); border: none; padding: 10px 22px; border-radius: 100px; font-size: 14px; cursor: pointer; font-family: var(--sans); transition: background 0.2s; position: relative; overflow: hidden; }
+  .nav-cta:hover { background: var(--terracotta); }
+  .nav-cta-label-short { display: none; }
+  @media (max-width: 600px) {
+    nav { padding: 0 16px; }
+    .nav-logo img { height: 28px; }
+    .nav-cta-label-full { display: none; }
+    .nav-cta-label-short { display: inline; }
+  }
+
+  section { padding: 100px 5%; }
+  .container { max-width: 960px; margin: 0 auto; }
+  .container-sm { max-width: 680px; margin: 0 auto; }
+
+  /* ── Hero full-viewport ── */
+  .hero-wrap {
+    display: flex;
+    flex-direction: column;
+    height: calc(var(--vh, 1vh) * 100 - 52px);
+  }
+  .hero {
+    background: var(--cream); text-align: center;
+    flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: 40px 5% 32px;
+    overflow: hidden;
+  }
+  .hero h1 { font-family: var(--serif); font-size: clamp(40px, 6vw, 72px); font-weight: 400; line-height: 1.1; letter-spacing: -1.5px; color: var(--charcoal); margin-bottom: 24px; }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--terracotta);
+    background: rgba(68, 230, 132, 0.12);
+    border-radius: 6px;
+    padding: 0 8px;
+    margin: 0 -8px;
+  }
+  .hero-sub { font-size: 18px; color: var(--muted); max-width: 520px; margin: 0 auto 28px; line-height: 1.4; }
+  .btn-primary { background: var(--terracotta); color: white; border: none; padding: 16px 36px; border-radius: 100px; font-size: 16px; cursor: pointer; font-family: var(--sans); transition: background 0.2s; position: relative; overflow: hidden; }
+  .btn-primary:hover { background: var(--terra-dark); }
+
+  /* ── Shine sweep on buttons ── */
+  .btn-primary::after, .nav-cta::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -75%;
+    width: 50%; height: 100%;
+    background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
+    transform: skewX(-15deg);
+    animation: btn-shine 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .nav-cta::after { animation-delay: 2s; }
+  @keyframes btn-shine {
+    0%   { left: -75%; opacity: 1; }
+    20%  { left: 130%; opacity: 1; }
+    21%  { left: 130%; opacity: 0; }
+    100% { left: 130%; opacity: 0; }
+  }
+  .hero-note { margin-top: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+  .hero-location { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .hero-timer {
+    display: flex; align-items: center; gap: 8px; justify-content: center;
+  }
+  .hero-timer-unit { display: flex; flex-direction: column; align-items: center; min-width: 40px; }
+  .hero-timer-unit span:first-child { font-size: 28px; line-height: 1; color: var(--charcoal); font-weight: 300; letter-spacing: -0.5px; font-family: var(--sans); }
+  .hero-timer-sub { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 3px; font-family: var(--sans); }
+  .hero-timer-sep { font-size: 22px; color: var(--muted); margin-bottom: 14px; font-family: var(--sans); font-weight: 300; }
+  .press-bar { background: var(--cream); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 20px 0; overflow: hidden; flex-shrink: 0; }
+  .press-logo-img { height: 40px; width: auto; object-fit: contain; opacity: 0.55; filter: grayscale(1); }
+
+  /* Desktop: full-width evenly spaced row */
+  .press-logos-desktop {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    padding: 0 5%;
+  }
+  .press-logos-mobile { display: none; }
+
+  /* Mobile: auto-scroll */
+  @media (max-width: 600px) {
+    .press-logo-img { height: 32px; }
+    .press-bar { padding: 16px 0; }
+    .press-logos-desktop { display: none; }
+    .press-logos-mobile { display: block; overflow: hidden; }
+    .press-logos-track {
+      display: flex;
+      width: max-content;
+      animation: press-scroll 14s linear infinite;
+      align-items: center;
+      gap: 48px;
+      padding: 0 24px;
+    }
+    .press-logo-img { height: 22px; }
+  }
+
+  .trust-bar { background: var(--charcoal); padding: 28px 5%; }
+  .trust-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: center; gap: 80px; flex-wrap: wrap; }
+  .trust-item { text-align: center; }
+  .trust-num { font-family: var(--serif); font-size: 28px; color: white; }
+  .trust-label { font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+
+  .insight { background: var(--warm); }
+  .insight-quote { font-family: var(--serif); font-size: clamp(24px, 3.5vw, 38px); font-weight: 400; line-height: 1.35; letter-spacing: -0.5px; color: var(--charcoal); margin-bottom: 16px; }
+  .insight-quote em { color: var(--terracotta); font-style: italic; }
+  .insight-body { font-size: 17px; color: var(--muted); line-height: 1.75; }
+  .divider { width: 48px; height: 2px; background: var(--terracotta); margin: 24px 0 20px; }
+
+  .section-label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--terracotta); margin-bottom: 16px; }
+  .section-title { font-family: var(--serif); font-size: clamp(28px, 4vw, 44px); font-weight: 400; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 16px; }
+  .section-sub { font-size: 17px; color: var(--muted); margin-bottom: 64px; max-width: 560px; }
+
+  .steps { display: flex; flex-direction: column; }
+  .step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 0 28px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .step.visible { opacity: 1; transform: translateY(0); }
+  .step-left { display: flex; flex-direction: column; align-items: center; }
+  .step-num {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 1.5px solid var(--terracotta);
+    background: var(--cream);
+    font-family: var(--serif); font-size: 20px;
+    color: var(--terracotta);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    position: relative; z-index: 1;
+  }
+  .step-line {
+    width: 1.5px;
+    flex: 1;
+    min-height: 40px;
+    background: var(--terracotta);
+    opacity: 0;
+    transition: opacity 0.6s ease 0.3s;
+    margin-top: 4px;
+  }
+  .step.visible .step-line { opacity: 0.25; }
+  .step:last-child .step-line { display: none; }
+  .step-content { padding: 2px 0 48px; }
+  .step-tag { display: inline-block; background: var(--terra-light); color: var(--terra-dark); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 10px; border-radius: 100px; margin-bottom: 10px; }
+  .step-title { font-size: 18px; font-weight: 500; margin-bottom: 8px; color: var(--charcoal); }
+  .step-desc { font-size: 15px; color: var(--muted); line-height: 1.65; }
+
+  .pola-strip { overflow: hidden; margin: 0 -5vw 56px; }
+  .pola-track {
+    display: flex;
+    width: max-content;
+    animation: pola-scroll 28s linear infinite;
+  }
+  .pola-track:hover { animation-play-state: paused; }
+  .pola-track img {
+    height: 200px;
+    width: auto;
+    border-radius: 14px;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+    margin-right: -32px;
+    position: relative;
+  }
+  .pola-track img:nth-child(odd)  { transform: rotate(-2deg) translateY(4px); }
+  .pola-track img:nth-child(even) { transform: rotate(1.5deg) translateY(-4px); }
+  @keyframes pola-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes press-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ── Powered-by scroll section ── */
+  .pb-outer {
+    position: relative;
+    height: 500vh;
+    background: var(--cream);
+  }
+  .pb-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  /* "powered by" label + club logo only shown on chapter 0 */
+  .pb-header {
+    position: relative; z-index: 10;
+    display: flex; flex-direction: column; align-items: center;
+    opacity: 0; transition: opacity 0.6s ease;
+    pointer-events: none;
+    text-align: center;
+  }
+  .pb-header.active { opacity: 1; pointer-events: auto; }
+  .pb-label {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px;
+  }
+  .pb-header img { max-width: 180px; width: 45vw; }
+  /* central stat panels (chapters 1-3) */
+  .pb-panels { position: absolute; z-index: 20; text-align: center; width: 100%; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+  .pb-panel {
+    position: absolute; top: 0; left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+    background: white;
+    border-radius: 20px;
+    padding: 32px 48px;
+    text-align: center;
+    box-shadow: 0 4px 32px rgba(26,46,34,0.08);
+  }
+  .pb-panel.active { opacity: 1; pointer-events: auto; }
+  .pb-stat {
+    font-family: var(--serif);
+    font-size: clamp(24px, 4.5vw, 40px);
+    font-weight: 400; line-height: 1.1;
+    color: var(--terracotta);
+    letter-spacing: -1px;
+    font-style: italic;
+  }
+  .pb-stat-label {
+    font-family: var(--serif);
+    font-size: clamp(13px, 1.8vw, 17px);
+    color: var(--charcoal);
+    margin-top: 8px; line-height: 1.4;
+  }
+  /* floating photos */
+  .pb-photos {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .pb-photo-layer {
+    position: absolute; inset: 0;
+  }
+  .pb-photo {
+    position: absolute;
+    border-radius: 16px;
+    object-fit: cover;
+    /* start below screen, invisible - JS sets transitions per photo */
+    transform: translateY(110vh);
+    opacity: 0;
+  }
+
+  @media (max-width: 600px) {
+    .pb-photo { width: 88px !important; border-radius: 10px; }
+    /* Mobile: hide the desktop sticky section */
+    .pb-outer { display: none; }
+    /* Mobile: show the vertical stack */
+    .pb-mobile { display: block !important; }
+  }
+
+  /* Mobile vertical stack */
+  .pb-mobile {
+    display: none;
+    background: var(--cream);
+    padding: 64px 5%;
+  }
+  .pb-mobile-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .pb-mobile-header .pb-label {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px;
+  }
+  .pb-mobile-header img { max-width: 160px; width: 50vw; }
+  .pb-mobile-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 32px rgba(26,46,34,0.08);
+    padding: 28px 24px;
+    margin-bottom: 24px;
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .pb-mobile-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .pb-mobile-stat {
+    font-family: var(--serif);
+    font-size: clamp(28px, 8vw, 40px);
+    font-weight: 400; line-height: 1.1;
+    color: var(--terracotta);
+    letter-spacing: -1px;
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+  .pb-mobile-label {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--charcoal);
+    line-height: 1.4;
+    margin-bottom: 20px;
+  }
+  .pb-mobile-photos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .pb-mobile-photos img {
+    width: 100%; aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .guarantee { background: var(--charcoal); color: white; }
+  .guarantee .section-label { color: rgba(61,107,79,0.9); }
+  .guarantee .section-title { color: white; }
+  .guarantee .section-sub { color: rgba(255,255,255,0.55); }
+  .g-box { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 48px; max-width: 620px; }
+  .g-promise { font-family: var(--serif); font-size: clamp(22px, 3vw, 30px); line-height: 1.3; color: white; margin-bottom: 16px; }
+  .g-promise em { color: #7FBD97; font-style: italic; }
+  .g-detail { font-size: 15px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+
+  .rules { background: var(--cream); }
+  .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+  .rule-card { border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+  .rule-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--terracotta); margin-bottom: 8px; }
+  .rule-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  .pricing { background: var(--warm); text-align: center; }
+  .pricing-card { background: var(--cream); border: 1px solid var(--border); border-radius: 20px; padding: 56px 48px; max-width: 480px; margin: 0 auto; }
+  .price-amount { font-family: var(--serif); font-size: 64px; color: var(--charcoal); line-height: 1; margin-bottom: 8px; }
+  .price-note { font-size: 14px; color: var(--muted); margin-bottom: 36px; }
+  .price-features { text-align: left; display: flex; flex-direction: column; gap: 14px; margin-bottom: 40px; }
+  .price-feat { display: flex; gap: 12px; align-items: center; font-size: 15px; color: var(--charcoal); }
+  .price-feat-dot { width: 6px; height: 6px; background: var(--terracotta); border-radius: 50%; flex-shrink: 0; }
+  .pricing-sub { margin-top: 24px; font-size: 14px; color: var(--muted); }
+  .pricing-sub a { color: var(--terracotta); text-decoration: none; }
+
+  .testi-arrows { display: flex; gap: 10px; margin-bottom: 36px; margin-left: auto; }
+  .testi-arrow {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+  }
+  .testi-arrow:hover { background: var(--cream); border-color: var(--charcoal); }
+  .testi-arrow svg { stroke: var(--charcoal); fill: none; stroke-width: 1.5; width: 18px; height: 18px; }
+  .testi-track-outer { overflow: visible; }
+  .testi-track {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .testi-card {
+    background: var(--cream); border: 1px solid var(--border); border-radius: 20px; padding: 32px;
+    display: flex; flex-direction: column; gap: 20px;
+    min-width: 30vw; max-width: 30vw;
+    flex-shrink: 0;
+  }
+  @media (max-width: 900px) {
+    .testi-card { min-width: 75vw; max-width: 75vw; }
+  }
+  @media (max-width: 700px) {
+    .science-grid { grid-template-columns: 1fr !important; }
+    .science-grid picture { order: 0 !important; }
+    .science-grid > div { order: 1 !important; }
+  }
+  .star-dot { width: 10px; height: 10px; background: var(--terracotta); clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); }
+
+  .faq { background: var(--cream); }
+  .faq-list { display: flex; flex-direction: column; border-top: 1px solid var(--border); }
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-q { padding: 24px 0; font-size: 16px; font-weight: 500; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; user-select: none; }
+  .faq-q svg { flex-shrink: 0; transition: transform 0.25s; stroke: var(--muted); fill: none; stroke-width: 1.5; width: 18px; height: 18px; }
+  .faq-q.open svg { transform: rotate(45deg); }
+  .faq-a { font-size: 15px; color: var(--muted); line-height: 1.75; max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.25s; }
+  .faq-a.open { max-height: 600px; padding-bottom: 24px; }
+
+  .cta-final { background: var(--charcoal); text-align: center; }
+  .cta-final h2 { font-family: var(--serif); font-size: clamp(28px, 4vw, 48px); font-weight: 400; color: white; margin-bottom: 20px; letter-spacing: -0.5px; }
+  .cta-final h2 em { color: #7FBD97; font-style: italic; }
+  .cta-final p { font-size: 16px; color: rgba(255,255,255,0.5); margin-bottom: 40px; }
+  .cta-note { margin-top: 16px; font-size: 13px; color: rgba(255,255,255,0.3); }
+
+  footer {
+    background: var(--charcoal);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 48px 5% 36px;
+  }
+  .footer-inner {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    flex-wrap: wrap; gap: 40px; margin-bottom: 40px;
+  }
+  .footer-logo img { height: 36px; width: auto; display: block; }
+  .footer-addresses { display: flex; gap: 48px; flex-wrap: wrap; }
+  .footer-address p { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.8; }
+  .footer-address p:first-child { color: rgba(255,255,255,0.7); font-weight: 500; margin-bottom: 2px; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer-bottom p { font-size: 13px; color: rgba(255,255,255,0.3); }
+  .footer-email { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
+  .nav-belief {
+    background: transparent;
+    color: var(--charcoal);
+    border: 1.5px solid var(--border);
+    padding: 10px 22px;
+    border-radius: 100px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: var(--sans);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .nav-belief:hover { background: var(--warm); border-color: var(--charcoal); }
+
+  .belief-modal-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(26,46,34,0.55);
+    align-items: center; justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .belief-modal-overlay.open { display: flex; }
+  .belief-modal {
+    background: var(--terra-dark);
+    color: rgba(255,255,255,0.85);
+    border-radius: 20px;
+    padding: 48px;
+    max-width: 620px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    font-size: 17px;
+    line-height: 1.75;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .belief-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,0.12); border: none;
+    color: white; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+    transition: background 0.2s;
+  }
+  .belief-close:hover { background: rgba(255,255,255,0.22); }
+  @media (max-width: 600px) {
+    .belief-modal { padding: 32px 24px; font-size: 15px; }
+    .nav-belief { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><img src="images/logo.png" alt="amata"></div>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <button class="nav-belief" onclick="document.getElementById('beliefModal').classList.add('open')">Our belief</button>
+    <button class="nav-cta" onclick="window.location.href='form.html'"><span class="nav-cta-label-full">Request an invite →</span><span class="nav-cta-label-short">Apply</span></button>
+  </div>
+</nav>
+
+<!-- Our Belief Modal -->
+<div id="beliefModal" class="belief-modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="belief-modal">
+    <button class="belief-close" onclick="document.getElementById('beliefModal').classList.remove('open')">×</button>
+    <p style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:28px;">Our Belief</p>
+    <p>At Amata, we believe that we — humans — are not the best to decide who we should go on a date with. Because attraction — especially based on pictures — and compatibility are two different things, and <strong>our brain isn't wired to tell them apart.</strong></p>
+    <p>We've been swiping for fifteen years. We've optimized our profiles, refined our bios, and curated our best photos. We've made checklists of what we want. And yet, here we are.</p>
+    <p><strong>The problem was never the apps. It was never the swipe. It was us.</strong></p>
+    <p>The data is brutal: research shows that what people say they want in a partner has almost nothing to do with who they actually fall for. Chemistry doesn't live in a photo. Compatibility doesn't reveal itself in a bio. Both only emerge in person — across from someone you might never have chosen based on a picture.</p>
+    <p>So why keep swiping and chatting for hours when you could go on a date tomorrow with someone worth meeting?</p>
+    <p>Amata takes the choice away — on purpose — with an AI trained on thousands of real dates, real debriefs, and real connections. <strong>An AI that knows you better than your checklist does.</strong></p>
+    <p>This takes courage. It means letting go of control. It means trusting a process over your swiping instincts.</p>
+    <p>But every great love story starts with a leap.</p>
+    <p style="font-family:var(--serif);font-style:italic;color:#7FBD97;margin-top:8px;">Be foolish. Fall in love.</p>
+  </div>
+</div>
+
+<div class="hero-wrap">
+<section class="hero">
+  <div class="container">
+    <div style="display:inline-block;background:var(--terra-light);color:var(--terra-dark);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:6px 18px;border-radius:100px;margin-bottom:32px;">The next chapter of Amata</div>
+    <h1>A blind date<br>with someone <em>great.</em><br>Tomorrow.</h1>
+    <p class="hero-sub" style="font-family:var(--serif);font-style:italic;font-weight:400;">Be foolish. Fall in love.</p>
+    <button class="btn-primary" onclick="window.location.href='form.html'" style="margin-bottom:48px;">Request an invite</button>
+    <div class="hero-note">
+      <div class="hero-location">
+        Next dating session
+        <span style="color:var(--border);margin:0 3px;">·</span>
+        <svg width="13" height="13" viewBox="0 0 512 512" fill="currentColor" style="flex-shrink:0;opacity:0.6;"><path d="M416,405.333h-10.667v-74.667c0-5.888-4.779-10.667-10.667-10.667h-32v-53.333c0-5.888-4.779-10.667-10.667-10.667h-16.939l-36.395-36.395v-48.939c0-15.872-8.811-29.589-21.717-36.949L266.624,9.771C266.176,4.245,261.547,0,256,0s-10.176,4.245-10.624,9.771l-10.325,123.947c-12.907,7.36-21.717,21.077-21.717,36.949v48.896L176.896,256H160c-5.888,0-10.667,4.779-10.667,10.667V320h-32c-5.888,0-10.667,4.779-10.667,10.667v74.667H96c-5.888,0-10.667,4.779-10.667,10.667v85.333C85.333,507.221,90.112,512,96,512s10.667-4.779,10.667-10.667v-74.667h106.667v74.667c0,5.888,4.779,10.667,10.667,10.667s10.667-4.779,10.667-10.667v-160h42.667v160c0,5.888,4.779,10.667,10.667,10.667s10.667-4.779,10.667-10.667v-74.667h106.667v74.667c0,5.888,4.779,10.667,10.667,10.667c5.888,0,10.667-4.779,10.667-10.667V416C426.667,410.112,421.888,405.333,416,405.333z M234.667,170.667c0-11.776,9.579-21.333,21.333-21.333s21.333,9.557,21.333,21.333v42.688h-42.667V170.667z M228.395,234.667h55.168L304.896,256h-97.835L228.395,234.667z M213.333,405.333H128v-64h85.333V405.333z M170.667,320v-42.667h10.603c0.021,0,0.043,0,0.064,0h160V320H170.667z M384,405.333h-85.333v-64H384V405.333z"/></svg>
+        NYC
+      </div>
+      <div class="hero-timer" id="heroTimer">
+        <div class="hero-timer-unit"><span id="timerDays">00</span><span class="hero-timer-sub">days</span></div>
+        <span class="hero-timer-sep">:</span>
+        <div class="hero-timer-unit"><span id="timerHours">00</span><span class="hero-timer-sub">hours</span></div>
+        <span class="hero-timer-sep">:</span>
+        <div class="hero-timer-unit"><span id="timerMins">00</span><span class="hero-timer-sub">min</span></div>
+        <span class="hero-timer-sep">:</span>
+        <div class="hero-timer-unit"><span id="timerSecs">00</span><span class="hero-timer-sub">sec</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="press-bar">
+  <!-- Desktop: fixed row -->
+  <div class="press-logos-desktop">
+    <img src="images/pr-home1.png" alt="Press logo" class="press-logo-img">
+    <img src="images/pr-home2.png" alt="Press logo" class="press-logo-img">
+    <img src="images/pr-home3.png" alt="Press logo" class="press-logo-img">
+    <img src="images/pr-home4.png" alt="Press logo" class="press-logo-img">
+  </div>
+  <!-- Mobile: auto-scrolling -->
+  <div class="press-logos-mobile">
+    <div class="press-logos-track">
+      <img src="images/pr-home1.png" alt="Press logo" class="press-logo-img">
+      <img src="images/pr-home2.png" alt="Press logo" class="press-logo-img">
+      <img src="images/pr-home3.png" alt="Press logo" class="press-logo-img">
+      <img src="images/pr-home4.png" alt="Press logo" class="press-logo-img">
+      <img src="images/pr-home1.png" alt="Press logo" class="press-logo-img">
+      <img src="images/pr-home2.png" alt="Press logo" class="press-logo-img">
+      <img src="images/pr-home3.png" alt="Press logo" class="press-logo-img">
+      <img src="images/pr-home4.png" alt="Press logo" class="press-logo-img">
+    </div>
+  </div>
+</div>
+</div>
+
+<section id="how">
+  <div class="container">
+    <p class="section-label">How it works</p>
+    <h2 class="section-title">Sign up today, date tomorrow.</h2>
+    <div class="pola-strip">
+      <div class="pola-track">
+        <img src="images/pola-1.jpg" alt=""><img src="images/pola-2.jpg" alt=""><img src="images/pola-3.jpg" alt=""><img src="images/pola-4.jpg" alt=""><img src="images/pola-5.jpg" alt=""><img src="images/pola-6.jpg" alt=""><img src="images/pola-7.jpg" alt=""><img src="images/pola-8.jpg" alt=""><img src="images/pola-9.jpg" alt=""><img src="images/pola-10.jpg" alt=""><img src="images/pola-11.jpg" alt=""><img src="images/pola-12.jpg" alt="">
+        <img src="images/pola-1.jpg" alt=""><img src="images/pola-2.jpg" alt=""><img src="images/pola-3.jpg" alt=""><img src="images/pola-4.jpg" alt=""><img src="images/pola-5.jpg" alt=""><img src="images/pola-6.jpg" alt=""><img src="images/pola-7.jpg" alt=""><img src="images/pola-8.jpg" alt=""><img src="images/pola-9.jpg" alt=""><img src="images/pola-10.jpg" alt=""><img src="images/pola-11.jpg" alt=""><img src="images/pola-12.jpg" alt="">
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-left">
+          <div class="step-num">1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-tag">Today 9am → 7pm</div>
+          <div class="step-title">Sign up</div>
+          <p class="step-desc">Your AI matchmaker gets to know you deeply — your personality, your history, your preferences, and what you're really looking for. It's a conversation, not a form. It will also show you photos of other members to understand your physical preferences. Then RSVP for your blind date tomorrow by 7PM.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left">
+          <div class="step-num">2</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-tag">Tonight 8pm</div>
+          <div class="step-title">We confirm — or not</div>
+          <p class="step-desc">Compatibility above 70%? Your date is on. Below that? We'll rematch tomorrow if you're up to it.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left">
+          <div class="step-num">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-tag">Tomorrow morning</div>
+          <div class="step-title">The reveal</div>
+          <p class="step-desc">Their first name. The bar. Your compatibility score. One thing you both relate to. That's it.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left">
+          <div class="step-num">4</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-tag">Tomorrow 8pm</div>
+          <div class="step-title">You show up</div>
+          <p class="step-desc">A table. Someone chosen for you. The rest is yours.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left">
+          <div class="step-num">5</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-tag">The morning after</div>
+          <div class="step-title">The debrief that improves everything</div>
+          <p class="step-desc">After each date, your AI asks you what happened. Not just "did you like them" — it goes deeper. Every debrief sharpens the next match. By date three, your matchmaker knows things about your chemistry that most people don't for themselves.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left">
+          <div class="step-num">6</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-tag">After your third date</div>
+          <div class="step-title">Become a member of the Amata Matchmaking Club</div>
+          <p class="step-desc">Join officially the Amata Matchmaking Club. Weekly matchmaking events, perks, and a community of people who date the same way you do now.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section style="background:var(--warm);padding:48px 0 100px 5%;overflow:hidden;">
+  <div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:0;padding-right:5%;">
+      <div>
+        <p class="section-label">From the community</p>
+        <h2 class="section-title" style="margin-bottom:8px;">What our members say.</h2>
+        <p class="section-sub" style="margin-bottom:0;">From people who stopped swiping and started trusting.</p>
+      </div>
+      <div class="testi-arrows" style="margin-left:auto;margin-right:0;">
+        <button class="testi-arrow" onclick="testiScroll(-1)" aria-label="Previous">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="testi-arrow" onclick="testiScroll(1)" aria-label="Next">
+          <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div style="height:40px;"></div>
+    <div class="testi-carousel-wrap">
+      <div class="testi-track-outer">
+        <div class="testi-track" id="testiTrack">
+          <div class="testi-card">
+            <div style="display:flex;gap:3px;"><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div></div>
+            <p style="font-family:var(--serif);font-size:17px;color:var(--charcoal);line-height:1.65;font-style:italic;flex:1;">"I would never have swiped right on him. Wrong industry, not my usual type at all. We've been together four months. I genuinely don't know what I was doing before Amata."</p>
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="width:44px;height:44px;border-radius:50%;background:var(--terra-light);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:var(--terra-dark);flex-shrink:0;">SL</div>
+              <div><div style="font-size:14px;font-weight:500;color:var(--charcoal);">Sarah L.</div><div style="font-size:13px;color:var(--muted);">34 · Marketing Director, NYC</div></div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div style="display:flex;gap:3px;"><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div></div>
+            <p style="font-family:var(--serif);font-size:17px;color:var(--charcoal);line-height:1.65;font-style:italic;flex:1;">"The debrief after date two was a turning point. The AI asked me something I'd never asked myself. By date four I finally understood why every relationship I'd had in my 30s had ended the same way."</p>
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="width:44px;height:44px;border-radius:50%;background:var(--terra-light);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:var(--terra-dark);flex-shrink:0;">MK</div>
+              <div><div style="font-size:14px;font-weight:500;color:var(--charcoal);">Marcus K.</div><div style="font-size:13px;color:var(--muted);">38 · Architect, NYC</div></div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div style="display:flex;gap:3px;"><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div></div>
+            <p style="font-family:var(--serif);font-size:17px;color:var(--charcoal);line-height:1.65;font-style:italic;flex:1;">"I'm a planner. I research everything. Showing up to a table not knowing who was sitting there was the scariest thing I've done. Also the best. We're planning a trip to Portugal next month."</p>
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="width:44px;height:44px;border-radius:50%;background:var(--terra-light);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:var(--terra-dark);flex-shrink:0;">JP</div>
+              <div><div style="font-size:14px;font-weight:500;color:var(--charcoal);">Jade P.</div><div style="font-size:13px;color:var(--muted);">31 · Consultant, NYC</div></div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div style="display:flex;gap:3px;"><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div></div>
+            <p style="font-family:var(--serif);font-size:17px;color:var(--charcoal);line-height:1.65;font-style:italic;flex:1;">"The 3 days of free coaching alone were worth it. I realized I'd spent years describing my ex when asked what I was looking for. Amata helped me figure out what I actually wanted for the first time."</p>
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="width:44px;height:44px;border-radius:50%;background:var(--terra-light);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:var(--terra-dark);flex-shrink:0;">TR</div>
+              <div><div style="font-size:14px;font-weight:500;color:var(--charcoal);">Thomas R.</div><div style="font-size:13px;color:var(--muted);">29 · Product Manager, NYC</div></div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div style="display:flex;gap:3px;"><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div></div>
+            <p style="font-family:var(--serif);font-size:17px;color:var(--charcoal);line-height:1.65;font-style:italic;flex:1;">"Date seven was it. Two completely different worlds. The AI saw something in both of us we couldn't see ourselves. I triggered the guarantee — Amata kept going, no questions asked. Worth every penny."</p>
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="width:44px;height:44px;border-radius:50%;background:var(--terra-light);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:var(--terra-dark);flex-shrink:0;">AN</div>
+              <div><div style="font-size:14px;font-weight:500;color:var(--charcoal);">Amara N.</div><div style="font-size:13px;color:var(--muted);">36 · Attorney, NYC</div></div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div style="display:flex;gap:3px;"><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div><div class="star-dot"></div></div>
+            <p style="font-family:var(--serif);font-size:17px;color:var(--charcoal);line-height:1.65;font-style:italic;flex:1;">"I was skeptical the whole way through. Even on the way to date three I was ready to quit. Then I walked in. We talked for four hours. That was eight months ago and I've never looked back."</p>
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="width:44px;height:44px;border-radius:50%;background:var(--terra-light);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:var(--terra-dark);flex-shrink:0;">DW</div>
+              <div><div style="font-size:14px;font-weight:500;color:var(--charcoal);">Daniel W.</div><div style="font-size:13px;color:var(--muted);">41 · Entrepreneur, NYC</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="pb-outer" id="poweredBy">
+  <div class="pb-sticky">
+
+    <!-- Chapter 0: "Powered by" + club logo (fixed header, not a panel) -->
+    <div class="pb-header active" id="pb-header">
+      <p class="pb-label">Powered by</p>
+      <img src="images/club-logo.png" alt="Amata Matchmaking Club">
+    </div>
+
+    <!-- floating photo layers -->
+    <div class="pb-photos">
+      <div class="pb-photo-layer" id="pb-layer-1">
+        <img class="pb-photo" src="images/party1.png"  style="width:150px;top:8%;left:1%"   data-delay="0"   data-dur="700">
+        <img class="pb-photo" src="images/party2.png"  style="width:130px;top:52%;left:9%"  data-delay="150" data-dur="900">
+        <img class="pb-photo" src="images/party3.png"  style="width:162px;top:74%;left:18%" data-delay="50"  data-dur="750">
+        <img class="pb-photo" src="images/party4.png"  style="width:138px;top:18%;left:30%" data-delay="200" data-dur="850">
+        <img class="pb-photo" src="images/party5.png"  style="width:152px;top:62%;left:41%" data-delay="100" data-dur="800">
+        <img class="pb-photo" src="images/party6.png"  style="width:142px;top:35%;left:51%" data-delay="250" data-dur="950">
+        <img class="pb-photo" src="images/party7.png"  style="width:158px;top:6%;left:62%"  data-delay="80"  data-dur="720">
+        <img class="pb-photo" src="images/party8.png"  style="width:132px;top:48%;left:71%" data-delay="180" data-dur="880">
+        <img class="pb-photo" src="images/party9.png"  style="width:168px;top:70%;left:80%" data-delay="30"  data-dur="780">
+        <img class="pb-photo" src="images/party10.png" style="width:145px;top:28%;left:27%" data-delay="220" data-dur="920">
+        <img class="pb-photo" src="images/party11.png" style="width:155px;top:82%;left:88%" data-delay="120" data-dur="820">
+        <img class="pb-photo" src="images/party12.png" style="width:135px;top:14%;left:93%" data-delay="280" data-dur="980">
+      </div>
+      <div class="pb-photo-layer" id="pb-layer-2">
+        <img class="pb-photo" src="images/pmm1.png"  style="width:150px;top:9%;left:2%"   data-delay="0"   data-dur="720">
+        <img class="pb-photo" src="images/pmm2.png"  style="width:130px;top:54%;left:10%" data-delay="140" data-dur="880">
+        <img class="pb-photo" src="images/pmm3.png"  style="width:165px;top:76%;left:19%" data-delay="60"  data-dur="760">
+        <img class="pb-photo" src="images/pmm4.png"  style="width:140px;top:20%;left:31%" data-delay="210" data-dur="860">
+        <img class="pb-photo" src="images/pmm5.png"  style="width:155px;top:64%;left:42%" data-delay="90"  data-dur="810">
+        <img class="pb-photo" src="images/pmm6.png"  style="width:144px;top:37%;left:52%" data-delay="260" data-dur="960">
+        <img class="pb-photo" src="images/pmm7.png"  style="width:160px;top:7%;left:63%"  data-delay="70"  data-dur="730">
+        <img class="pb-photo" src="images/pmm8.png"  style="width:134px;top:50%;left:72%" data-delay="170" data-dur="870">
+        <img class="pb-photo" src="images/pmm9.png"  style="width:170px;top:72%;left:81%" data-delay="40"  data-dur="790">
+        <img class="pb-photo" src="images/pmm10.png" style="width:148px;top:30%;left:28%" data-delay="230" data-dur="930">
+        <img class="pb-photo" src="images/pmm11.png" style="width:158px;top:84%;left:89%" data-delay="110" data-dur="830">
+        <img class="pb-photo" src="images/pmm12.png" style="width:138px;top:16%;left:94%" data-delay="270" data-dur="970">
+      </div>
+      <div class="pb-photo-layer" id="pb-layer-3">
+        <img class="pb-photo" src="images/date1.png"  style="width:150px;top:8%;left:1%"   data-delay="0"   data-dur="710">
+        <img class="pb-photo" src="images/date2.png"  style="width:129px;top:53%;left:9%"  data-delay="160" data-dur="890">
+        <img class="pb-photo" src="images/date3.png"  style="width:164px;top:75%;left:18%" data-delay="60"  data-dur="770">
+        <img class="pb-photo" src="images/date4.png"  style="width:139px;top:19%;left:30%" data-delay="200" data-dur="840">
+        <img class="pb-photo" src="images/date5.png"  style="width:153px;top:63%;left:41%" data-delay="110" data-dur="820">
+        <img class="pb-photo" src="images/date7.png"  style="width:143px;top:36%;left:51%" data-delay="240" data-dur="940">
+        <img class="pb-photo" src="images/date8.png"  style="width:159px;top:6%;left:62%"  data-delay="80"  data-dur="740">
+        <img class="pb-photo" src="images/date9.png"  style="width:133px;top:49%;left:71%" data-delay="190" data-dur="900">
+        <img class="pb-photo" src="images/date10.png" style="width:169px;top:71%;left:80%" data-delay="30"  data-dur="770">
+        <img class="pb-photo" src="images/date11.png" style="width:146px;top:29%;left:27%" data-delay="220" data-dur="910">
+        <img class="pb-photo" src="images/date12.png" style="width:156px;top:83%;left:88%" data-delay="130" data-dur="840">
+        <img class="pb-photo" src="images/date12.png" style="width:136px;top:13%;left:93%" data-delay="290" data-dur="990">
+      </div>
+    </div>
+
+    <!-- Stat panels for chapters 1-3 -->
+    <div class="pb-panels">
+      <div class="pb-panel" id="pb-panel-1">
+        <div class="pb-stat"><span class="pb-counter" data-target="50000" data-suffix="">0</span> RSVP</div>
+        <div class="pb-stat-label">to our NYC singles events</div>
+      </div>
+      <div class="pb-panel" id="pb-panel-2">
+        <div class="pb-stat"><span class="pb-counter" data-target="10" data-suffix="M+">0</span> views</div>
+        <div class="pb-stat-label">views for our show "Playing Matchmaker"</div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:8px;border:1.5px solid var(--border);border-radius:100px;padding:8px 16px;">
+            <img src="images/instagram.png" alt="Instagram" style="width:22px;height:22px;object-fit:contain;">
+            <span style="font-family:var(--serif);font-style:italic;font-size:15px;color:var(--charcoal);">@amata_app</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;border:1.5px solid var(--border);border-radius:100px;padding:8px 16px;">
+            <img src="images/tiktok.png" alt="TikTok" style="width:22px;height:22px;object-fit:contain;">
+            <span style="font-family:var(--serif);font-style:italic;font-size:15px;color:var(--charcoal);">@amata.app</span>
+          </div>
+        </div>
+      </div>
+      <div class="pb-panel" id="pb-panel-3">
+        <div class="pb-stat"><span class="pb-counter" data-target="10000" data-suffix="">0</span> dates</div>
+        <div class="pb-stat-label">set-up through the Amata app</div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<!-- Mobile: vertical stack (shown only on mobile) -->
+<div class="pb-mobile">
+  <div class="pb-mobile-header">
+    <p class="pb-label">Powered by</p>
+    <img src="images/club-logo.png" alt="Amata Matchmaking Club">
+  </div>
+
+  <div class="pb-mobile-card">
+    <div class="pb-mobile-stat">50,000 RSVP</div>
+    <div class="pb-mobile-label">to our NYC singles events</div>
+    <div class="pb-mobile-photos">
+      <img src="images/party1.png" alt=""><img src="images/party2.png" alt=""><img src="images/party3.png" alt="">
+      <img src="images/party4.png" alt=""><img src="images/party5.png" alt=""><img src="images/party6.png" alt="">
+    </div>
+  </div>
+
+  <div class="pb-mobile-card">
+    <div class="pb-mobile-stat">10M+ views</div>
+    <div class="pb-mobile-label">for our show "Playing Matchmaker"</div>
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:6px;border:1.5px solid var(--border);border-radius:100px;padding:6px 12px;">
+        <img src="images/instagram.png" alt="Instagram" style="width:18px;height:18px;object-fit:contain;">
+        <span style="font-family:var(--serif);font-style:italic;font-size:13px;color:var(--charcoal);">@amata_app</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;border:1.5px solid var(--border);border-radius:100px;padding:6px 12px;">
+        <img src="images/tiktok.png" alt="TikTok" style="width:18px;height:18px;object-fit:contain;">
+        <span style="font-family:var(--serif);font-style:italic;font-size:13px;color:var(--charcoal);">@amata.app</span>
+      </div>
+    </div>
+    <div class="pb-mobile-photos">
+      <img src="images/pmm1.png" alt=""><img src="images/pmm2.png" alt=""><img src="images/pmm3.png" alt="">
+      <img src="images/pmm4.png" alt=""><img src="images/pmm5.png" alt=""><img src="images/pmm6.png" alt="">
+    </div>
+  </div>
+
+  <div class="pb-mobile-card">
+    <div class="pb-mobile-stat">10,000 dates</div>
+    <div class="pb-mobile-label">set-up through the Amata app</div>
+    <div class="pb-mobile-photos">
+      <img src="images/date1.png" alt=""><img src="images/date2.png" alt=""><img src="images/date3.png" alt="">
+      <img src="images/date4.png" alt=""><img src="images/date5.png" alt=""><img src="images/date7.png" alt="">
+    </div>
+  </div>
+</div>
+
+<section class="faq">
+  <div class="container-sm">
+    <p class="section-label">Questions</p>
+    <h2 class="section-title" style="margin-bottom:48px;">The things people always ask.</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What is Amata?<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a">Amata is a matchmaking app that organizes thousands of dates across the US every month. Backed by $15M from leading US and European venture capital firms, Amata is redefining how people meet — replacing endless swiping with an AI matchmaker that does the choosing for you.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Who are the founders?<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a">Amata was created by three serial entrepreneurs including Ludovic Huraux. Ludovic built one of the largest dating platforms in France back in 2007, generating more than one wedding every day. He is also an early investor in Hugging Face, one of the largest AI companies in the world.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What's the difference between the Amata app and this program?<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a">The Amata Blind Dates program is a different experience entirely. While the Amata app is already more curated than anything else on the market, this program goes further — a fully blind format, a more personalized matching process, and a new AI system built specifically around deeper compatibility signals. Think of it as Amata's most premium offering, designed for people who are ready to fully trust the process.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Where are the dates organized?<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a">We handpick bars across New York City that are warm, intimate, and conducive to real conversation. All venues serve both alcoholic and soft drinks, so you're comfortable whatever your preference. Every spot is vetted by our team, and we always make sure the venue works for both of you geographically. You'll receive the name and address the evening before your date, along with your match's first name and a compatibility note.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Why is it not free?<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a">Because skin in the game changes everything. When both you and your match have paid for the program, you both show up — physically and emotionally. Free dating apps create a low-stakes environment where ghosting, last-minute cancellations, and half-hearted effort are the norm. Amata Blind Dates is built on the opposite principle: commitment from day one, on both sides of the table. The fee is also what allows us to curate the community, promote the program, and guarantee the quality of your experience. For context, a traditional matchmaker offering a similar service would charge upwards of $6,000. We built Amata to make that level of matchmaking accessible to everyone.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Why don't I get to see who I'm meeting?<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a">Because photos are where most of bad decisions happen in online dating. People decline matches they'd have loved in real life, because a photo didn't match their imagined "type." Removing that variable is the whole point. And no worries, your AI matchmaker will take into account your physical preferences among many other criteria determining your real compatibility for a meaningful relationship.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What if I'm just not attracted to the person?<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a">That's exactly the data your AI matchmaker needs. Tell it everything in the debrief — what you felt, what you noticed, what surprised you. Every piece of honest feedback calibrates the next match. The debrief is not just a courtesy — it's the engine of the whole program.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How can you make sure the matching is good enough?<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a">Our AI was trained on thousands of dates and date debriefs organized through the Amata app. If your compatibility score is below 75% for a scheduled date, we'll skip that week and rematch you the following one — you'll be notified at least 24 hours in advance. This will be rare: Amata Blind Dates is an exclusive program and we only open new spots when we can guarantee the quality of your matches.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How does the guarantee actually work?<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a">Complete at least 5 of your 6 scheduled dates. If none of them result in both people wanting a second date, Amata continues organizing blind dates for you at no charge — up to 12 total. A "mutual spark" means you both shared you want to meet again in your post-date debrief.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What happens if I need to cancel a date?<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a">Life happens. Cancel with more than 24 hours' notice and we'll reschedule your match — you can do this three times during the program. Cancel with less than 24 hours, and that date is forfeited. If you no-show without any notice, you're removed from the program. These rules exist to protect the person waiting for you at the table.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How do you ensure that the blind dates are safe?<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a">Feeling a little nervous before a blind date is completely normal. Amata has been carefully designed so you feel comfortable and safe from the very first date. Here's how we make that happen:<br><br>
+        · All members are screened and manually verified by our moderation team before joining the program<br>
+        · Dates take place in safe, welcoming venues where staff ensures everything runs smoothly<br>
+        · Accounts of members who don't show up are banned from the program<br>
+        · Both you and your match pay upfront for the program, ensuring everyone is genuinely committed to showing up<br>
+        · Date debriefs are automatically reviewed to make sure everything went well and flag any concerns<br>
+        · A dedicated support team available at any time and quick to respond</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is the Amata Blind Dates Program available outside New York?<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a">Not yet. We're launching in NYC first, with new cities planned once we've run and refined the first cohorts. Join the waitlist and we'll notify you when your city is live.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final">
+  <div class="container-sm">
+    <h2>Ready to stop choosing <em>the wrong people</em>?</h2>
+    <button class="btn-primary" style="font-size:17px;padding:18px 44px;" onclick="window.location.href='form.html'">Start my program today →</button>
+    <p class="cta-note">New York City only · Limited spots per cohort</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <img src="images/logo-footer.png" alt="Amata">
+    </div>
+    <div class="footer-addresses">
+      <div class="footer-address">
+        <p>New York</p>
+        <p>95 Wall St</p>
+        <p>New York, NY 10005</p>
+        <p>United States</p>
+      </div>
+      <div class="footer-address">
+        <p>Paris</p>
+        <p>66 Avenue des Champs-Élysées</p>
+        <p>75008 Paris</p>
+        <p>France</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Amata. All rights reserved.</p>
+    <div style="display:flex;gap:24px;align-items:center;">
+      <a href="terms.html" style="font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Terms & Conditions</a>
+      <a href="mailto:contact@amata.ai" class="footer-email">contact@amata.ai</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Lock viewport height to prevent iOS browser chrome jump
+(function() {
+  var vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', vh + 'px');
+})();
+
+function toggleFaq(el) {
+  const a = el.nextElementSibling;
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-q.open').forEach(q => { q.classList.remove('open'); q.nextElementSibling.classList.remove('open'); });
+  if (!isOpen) { el.classList.add('open'); a.classList.add('open'); }
+}
+
+// ── Hero countdown: next Tuesday 8PM EST ──
+(function() {
+  function getNextTuesday8pmEST() {
+    const now = new Date();
+    // Get EST offset dynamically (handles daylight saving)
+    const estString = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
+    const estNow = new Date(estString);
+
+    const day = estNow.getDay(); // 0=Sun, 2=Tue
+    let daysUntil = (2 - day + 7) % 7;
+    if (daysUntil === 0 && (estNow.getHours() > 20 || (estNow.getHours() === 20 && estNow.getMinutes() > 0))) {
+      daysUntil = 7;
+    }
+
+    const target = new Date(estNow);
+    target.setDate(estNow.getDate() + daysUntil);
+    target.setHours(20, 0, 0, 0);
+
+    // Convert EST target back to UTC for diff calculation
+    const estTargetStr = target.toLocaleString('en-US', { timeZone: 'America/New_York' });
+    const diff = target.getTime() - new Date(estString).getTime();
+    return now.getTime() + diff;
+  }
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function updateTimer() {
+    const diff = Math.max(0, getNextTuesday8pmEST() - Date.now());
+    const d = document.getElementById('timerDays');
+    const h = document.getElementById('timerHours');
+    const m = document.getElementById('timerMins');
+    const s = document.getElementById('timerSecs');
+    if (d) d.textContent = pad(Math.floor(diff / 86400000));
+    if (h) h.textContent = pad(Math.floor((diff % 86400000) / 3600000));
+    if (m) m.textContent = pad(Math.floor((diff % 3600000) / 60000));
+    if (s) s.textContent = pad(Math.floor((diff % 60000) / 1000));
+  }
+
+  updateTimer();
+  setInterval(updateTimer, 1000);
+})();
+(function() {
+  const outer = document.getElementById('poweredBy');
+  if (!outer) return;
+
+  const header = document.getElementById('pb-header');
+  const panels = [1,2,3].map(i => document.getElementById('pb-panel-' + i));
+  const layers = [1,2,3].map(i => document.getElementById('pb-layer-' + i));
+
+  // Init photos below screen
+  layers.forEach(layer => {
+    layer.querySelectorAll('.pb-photo').forEach(img => {
+      img.style.transform  = 'translateY(110vh)';
+      img.style.opacity    = '0';
+      img.style.transition = `transform ${img.dataset.dur||800}ms cubic-bezier(0.22,1,0.36,1) ${img.dataset.delay||0}ms, opacity ${img.dataset.dur||800}ms ease ${img.dataset.delay||0}ms`;
+    });
+  });
+
+  let currentChapter = 0;
+  let locked = false;
+  const LOCK_MS = 1100;
+  let wheelAccum = 0;
+  const WHEEL_THRESHOLD = 80;
+
+  function countUp(el) {
+    const target = parseInt(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const start = performance.now();
+    (function tick(now) {
+      const t = Math.min((now - start) / 900, 1);
+      el.textContent = Math.round((1 - Math.pow(1-t,3)) * target).toLocaleString() + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+    })(performance.now());
+  }
+
+  function hideLayer(layer) {
+    layer.querySelectorAll('.pb-photo').forEach(img => {
+      img.style.transition = 'transform 400ms cubic-bezier(0.4,0,1,1), opacity 300ms ease';
+      img.style.transform  = 'translateY(-60vh)';
+      img.style.opacity    = '0';
+    });
+  }
+
+  function showLayer(layer) {
+    layer.querySelectorAll('.pb-photo').forEach(img => {
+      img.style.transition = `transform ${img.dataset.dur||800}ms cubic-bezier(0.22,1,0.36,1) ${img.dataset.delay||0}ms, opacity ${img.dataset.dur||800}ms ease ${img.dataset.delay||0}ms`;
+      img.style.transform  = 'translateY(0)';
+      img.style.opacity    = '1';
+    });
+  }
+
+  function resetLayer(layer) {
+    layer.querySelectorAll('.pb-photo').forEach(img => {
+      img.style.transition = 'none';
+      img.style.transform  = 'translateY(110vh)';
+      img.style.opacity    = '0';
+    });
+  }
+
+  function applyChapter(ch) {
+    header.classList.toggle('active', ch === 0);
+    panels.forEach((p, i) => {
+      const active = i + 1 === ch;
+      p.classList.toggle('active', active);
+      if (active) { const c = p.querySelector('.pb-counter'); if (c) countUp(c); }
+    });
+    layers.forEach((layer, i) => {
+      if (i + 1 === ch) showLayer(layer);
+      else if (i + 1 < ch) hideLayer(layer);
+      else resetLayer(layer);
+    });
+  }
+
+  function tryAdvance(dir) {
+    if (locked) return false;
+    const next = currentChapter + dir;
+    if (next < 0 || next > 3) return false;
+    locked = true;
+    currentChapter = next;
+    applyChapter(currentChapter);
+    setTimeout(() => { locked = false; wheelAccum = 0; }, LOCK_MS);
+    return true;
+  }
+
+  function isActive() {
+    const rect = outer.getBoundingClientRect();
+    return rect.top <= 50 && rect.bottom >= window.innerHeight - 150;
+  }
+
+  // Wheel
+  window.addEventListener('wheel', (e) => {
+    if (!isActive()) return;
+    const dir = e.deltaY > 0 ? 1 : -1;
+    if (currentChapter === 0 && dir < 0) return;
+    if (currentChapter === 3 && dir > 0) return;
+    e.preventDefault();
+    if (locked) return;
+    wheelAccum += Math.abs(e.deltaY);
+    if (wheelAccum >= WHEEL_THRESHOLD) { wheelAccum = 0; tryAdvance(dir); }
+  }, { passive: false });
+
+  // Touch — intercept during move, advance once threshold crossed
+  let touchStartY = 0, touchStartX = 0, touchActive = false, touchConsumed = false;
+
+  window.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
+    touchActive = isActive();
+    touchConsumed = false;
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!touchActive) return;
+    const dy = touchStartY - e.touches[0].clientY;
+    const dx = touchStartX - e.touches[0].clientX;
+    if (Math.abs(dx) > Math.abs(dy)) return;
+    const dir = dy > 0 ? 1 : -1;
+    if (currentChapter === 0 && dir < 0) return;
+    if (currentChapter === 3 && dir > 0) return;
+    e.preventDefault();
+    if (!touchConsumed && Math.abs(dy) >= 40) {
+      touchConsumed = true;
+      tryAdvance(dir);
+    }
+  }, { passive: false });
+
+  applyChapter(0);
+})();
+
+
+// Mobile pb cards — fade in on scroll
+const pbMobileObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.pb-mobile-card').forEach(c => pbMobileObserver.observe(c));
+
+let testiIndex = 0;
+function testiScroll(dir) {
+  const track = document.getElementById('testiTrack');
+  const cards = track.querySelectorAll('.testi-card');
+  const cardWidth = cards[0].getBoundingClientRect().width + 20;
+  const max = cards.length - 1;
+  testiIndex = Math.max(0, Math.min(testiIndex + dir, max));
+  track.style.transform = `translateX(-${testiIndex * cardWidth}px)`;
+}
+const stepObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.step').forEach((step, i) => {
+  step.style.transitionDelay = `${i * 0.12}s`;
+  stepObserver.observe(step);
+});
+</script>
+</body>
+</html>
