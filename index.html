@@ -58,8 +58,11 @@
     color: var(--terracotta);
     background: rgb(0 0 0 / 30%);
     border-radius: 0px;
-    padding: 4px 0px;
-    margin: 0 -8px;
+    padding: 4px 8px;
+    margin: 0;
+    display: inline;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
   .hero-sub { font-size: 18px; color: var(--muted); max-width: 520px; margin: 0 auto 28px; line-height: 1.4; }
   .btn-primary { background: var(--terracotta); color: white; border: none; padding: 16px 36px; border-radius: 100px; font-size: 16px; cursor: pointer; font-family: var(--sans); transition: background 0.2s; position: relative; overflow: hidden; }
@@ -176,11 +179,14 @@
   .step-title { font-size: 18px; font-weight: 500; margin-bottom: 8px; color: var(--charcoal); }
   .step-desc { font-size: 15px; color: var(--muted); line-height: 1.65; }
 
-  .pola-strip { overflow: hidden; margin: 0 -5vw 56px; }
+  .pola-strip { overflow: hidden; margin: 0 -5vw 56px; height: 240px; position: relative; }
   .pola-track {
     display: flex;
     width: max-content;
-    will-change: transform;
+    align-items: center;
+    height: 100%;
+    gap: 20px;
+    padding: 0 20px;
   }
   .pola-track img {
     height: 200px;
@@ -189,11 +195,9 @@
     object-fit: cover;
     flex-shrink: 0;
     display: block;
-    margin-right: -32px;
     position: relative;
+    will-change: transform;
   }
-  .pola-track img:nth-child(odd)  { transform: rotate(-2deg) translateY(4px); }
-  .pola-track img:nth-child(even) { transform: rotate(1.5deg) translateY(-4px); }
   @keyframes press-scroll {
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
@@ -493,7 +497,7 @@
   <div class="nav-logo"><img src="images/logo.png" alt="amata"></div>
   <div style="display:flex;gap:10px;align-items:center;">
     <button class="nav-belief" onclick="document.getElementById('beliefModal').classList.add('open')">Our belief</button>
-    <button class="nav-cta" onclick="window.location.href='form.html'"><span class="nav-cta-label-full">Request an invite →</span><span class="nav-cta-label-short">Apply</span></button>
+    <button class="nav-cta" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})"><span class="nav-cta-label-full">Request an invite →</span><span class="nav-cta-label-short">Apply</span></button>
   </div>
 </nav>
 
@@ -526,7 +530,7 @@
     <div style="display:inline-block;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.8);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:6px 18px;border-radius:100px;margin-bottom:32px;">The next chapter of Amata</div>
     <h1 style="color:white;">A blind date<br>with someone <em>great.</em><br>Tomorrow.</h1>
     <p class="hero-sub" style="font-family:var(--serif);font-style:italic;font-weight:400;color:rgba(255,255,255,0.7);">Be foolish. Fall in love.</p>
-    <button class="btn-primary" onclick="window.location.href='form.html'" style="margin-bottom:48px;">Request an invite</button>
+    <button class="btn-primary" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})" style="margin-bottom:48px;">Request an invite</button>
     <div class="hero-note">
       <div class="hero-location" style="color:rgba(255,255,255,0.9);">
         Next dating session
@@ -851,7 +855,7 @@
   </div>
 </div>
 
-<section class="cta-final">
+<section class="cta-final" id="cta-final">
   <div class="container-sm">
     <h2>Free <em>tomorrow</em> night?</h2>
     <p>Request an invite. We'll take it from there.</p>
@@ -1083,14 +1087,32 @@ const pbMobileObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.15 });
 document.querySelectorAll('.pb-mobile-card').forEach(c => pbMobileObserver.observe(c));
 
-// ── Pola strip: scroll-driven horizontal movement ──
+// ── Pola strip: per-image parallax scroll ──
 (function() {
-  const track = document.querySelector('.pola-track');
-  if (!track) return;
+  const imgs = document.querySelectorAll('.pola-track img');
+  if (!imgs.length) return;
+
+  // Each image gets a unique speed and rotation/vertical offset
+  const speeds   = [0.15, 0.32, 0.22, 0.41, 0.18, 0.35, 0.28, 0.12, 0.38, 0.25, 0.44, 0.20,
+                    0.15, 0.32, 0.22, 0.41, 0.18, 0.35, 0.28, 0.12, 0.38, 0.25, 0.44, 0.20];
+  const rotations= [-2, 1.5, -1, 2.5, -1.8, 1, -2.5, 1.2, -1.5, 2, -1, 1.8,
+                    -2, 1.5, -1, 2.5, -1.8, 1, -2.5, 1.2, -1.5, 2, -1, 1.8];
+  const verticals= [4, -4, 6, -2, 3, -6, 2, -3, 5, -5, 1, -4,
+                    4, -4, 6, -2, 3, -6, 2, -3, 5, -5, 1, -4];
+
+  // Set initial rotation/vertical
+  imgs.forEach((img, i) => {
+    img.style.transform = `rotate(${rotations[i] || 0}deg) translateY(${verticals[i] || 0}px)`;
+  });
+
   window.addEventListener('scroll', () => {
-    const totalWidth = track.scrollWidth / 2;
-    const offset = (window.scrollY * 0.4) % totalWidth;
-    track.style.transform = `translateX(-${offset}px)`;
+    const scrollY = window.scrollY;
+    imgs.forEach((img, i) => {
+      const x = scrollY * (speeds[i] || 0.2);
+      const rot = rotations[i] || 0;
+      const vy = verticals[i] || 0;
+      img.style.transform = `translateX(-${x}px) rotate(${rot}deg) translateY(${vy}px)`;
+    });
   }, { passive: true });
 })();
 
