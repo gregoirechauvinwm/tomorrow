@@ -61,10 +61,10 @@
     nav { padding: 0 16px; }
     .nav-logo img { height: 28px; }
     .nav-cta-label-full { display: none; }
-    .nav-cta-label-short { display: none; } /* hidden until scrolled */
-    .nav-cta { display: none; } /* hide desktop CTA on mobile */
-    .nav-belief { font-size: 12px; padding: 8px 14px; }
-    .nav-cta-mobile { display: block; }
+    .nav-cta-label-short { display: none; }
+    .nav-cta { display: none; }
+    .nav-belief { font-size: 13px; padding: 8px 16px; line-height: 1.4; }
+    .nav-cta-mobile { display: block; font-size: 13px; padding: 8px 16px; }
   }
 
   section { padding: 100px 5%; }
@@ -75,7 +75,8 @@
   .hero-wrap {
     display: flex;
     flex-direction: column;
-    height: calc(var(--vh, 1vh) * 100 - 52px);
+    height: calc(100vh - 52px);
+    height: calc(100dvh - 52px);
   }
   .hero {
     background: var(--cream); text-align: center;
@@ -472,12 +473,13 @@
     background: transparent;
     color: #ffffff;
     border: 1.5px solid rgba(255,255,255,0.25);
-    padding: 10px 22px;
+    padding: 8px 18px;
     border-radius: 100px;
     font-size: 14px;
     cursor: pointer;
     font-family: var(--sans);
     transition: border-color 0.2s, background 0.2s;
+    line-height: 1.4;
   }
   .nav-belief:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.5); }
 
@@ -518,19 +520,9 @@
     border: 1px solid rgba(255,255,255,0.12);
   }
   @media (max-width: 600px) {
-    .invite-form {
-      flex-direction: column;
-      border-radius: 20px;
-      gap: 8px;
-      padding: 10px;
-    }
     .invite-form .btn-primary {
-      width: 100%;
-      border-radius: 100px;
-    }
-    .invite-form input[type="email"] {
-      padding: 10px 16px !important;
-      text-align: center;
+      padding: 12px 16px !important;
+      font-size: 14px !important;
     }
   }
   .belief-close {
@@ -554,8 +546,8 @@
   <div class="nav-logo"><img src="images/logo.png" alt="amata"></div>
   <div style="display:flex;gap:10px;align-items:center;margin-left:auto;">
     <button class="nav-belief" onclick="document.getElementById('beliefModal').classList.add('open')">Our belief</button>
-    <button class="nav-cta" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})"><span class="nav-cta-label-full">Request an invite</span><span class="nav-cta-label-short">Apply</span></button>
-    <button class="nav-cta-mobile" id="navCtaMobile" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})">Request an invite</button>
+    <button class="nav-cta" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})"><span class="nav-cta-label-full">Request invite</span><span class="nav-cta-label-short" style="display:none;">Request invite</span></button>
+    <button class="nav-cta-mobile" id="navCtaMobile" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})">Request invite</button>
   </div>
 </nav>
 
@@ -588,7 +580,7 @@
     <div style="display:inline-block;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.8);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:6px 18px;border-radius:100px;margin-bottom:32px;">The next chapter of Amata</div>
     <h1 style="color:white;">A blind date<br>with someone <em>great.</em><br>Tomorrow.</h1>
     <p class="hero-sub" style="font-family:var(--serif);font-style:italic;font-weight:400;color:rgba(255,255,255,0.7);">Be foolish. Fall in love.</p>
-    <button class="btn-primary" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})" style="margin-bottom:48px;">Request an invite</button>
+    <button class="btn-primary" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})" style="margin-bottom:48px;">Request invite</button>
     <div class="hero-note">
       <div class="hero-location" style="color:rgba(255,255,255,0.9);">
         Next dating session
@@ -917,11 +909,9 @@
   <div class="container-sm">
     <h2>Free <em>tomorrow</em> night?</h2>
     <p>Request an invite. We'll take it from there.</p>
-    <form id="inviteForm" action="https://formspree.io/f/xvzlpzyr" method="POST" class="invite-form" onsubmit="handleInvite(event)">
+    <form id="inviteForm" class="invite-form" onsubmit="handleInvite(event)">
       <input type="email" name="email" placeholder="Your email address" required style="flex:1;background:transparent;border:none;outline:none;padding:12px 20px;font-size:15px;color:white;font-family:var(--sans);" oninput="this.style.color='white'" />
-      <input type="hidden" name="_subject" id="emailSubject" value="Someone just requested an invite on tomorrow by amata" />
-      <input type="hidden" name="_next" value="confirmation.html" />
-      <button type="submit" class="btn-primary" style="padding:14px 28px;font-size:15px;white-space:nowrap;">Request an invite</button>
+      <button type="submit" class="btn-primary" style="padding:14px 28px;font-size:15px;white-space:nowrap;">Request invite</button>
     </form>
     <p class="cta-note">Limited spots</p>
   </div>
@@ -978,8 +968,23 @@
 })();
 
 function handleInvite(e) {
+  e.preventDefault();
   const email = document.querySelector('#inviteForm input[type="email"]').value;
-  document.getElementById('emailSubject').value = email + ' just requested an invite on tomorrow by amata';
+  const btn = document.querySelector('#inviteForm button[type="submit"]');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  fetch('https://formspree.io/f/xvzlpzyr', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      email: email,
+      _subject: email + ' just requested an invite on tomorrow by amata'
+    })
+  })
+  .then(r => r.json())
+  .then(() => { window.location.href = 'confirmation.html'; })
+  .catch(() => { window.location.href = 'confirmation.html'; });
 }
 
 function toggleFaq(el) {
