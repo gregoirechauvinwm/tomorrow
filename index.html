@@ -41,10 +41,21 @@
     font-family: var(--sans);
     opacity: 0;
     transform: translateY(-8px);
-    transition: opacity 0.35s ease, transform 0.35s ease;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    padding-left: 0;
+    padding-right: 0;
+    transition: opacity 0.35s ease, transform 0.35s ease, max-width 0.35s ease, padding 0.35s ease;
     pointer-events: none;
   }
-  .nav-cta-mobile.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .nav-cta-mobile.visible {
+    opacity: 1;
+    transform: translateY(0);
+    max-width: 200px;
+    padding: 8px 18px;
+    pointer-events: auto;
+  }
 
   @media (max-width: 600px) {
     nav { padding: 0 16px; }
@@ -496,6 +507,32 @@
     flex-direction: column;
     gap: 20px;
   }
+  .invite-form {
+    display: flex;
+    gap: 0;
+    max-width: 520px;
+    margin: 0 auto 16px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 100px;
+    padding: 6px;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  @media (max-width: 600px) {
+    .invite-form {
+      flex-direction: column;
+      border-radius: 20px;
+      gap: 8px;
+      padding: 10px;
+    }
+    .invite-form .btn-primary {
+      width: 100%;
+      border-radius: 100px;
+    }
+    .invite-form input[type="email"] {
+      padding: 10px 16px !important;
+      text-align: center;
+    }
+  }
   .belief-close {
     position: absolute; top: 16px; right: 16px;
     width: 32px; height: 32px; border-radius: 50%;
@@ -517,8 +554,8 @@
   <div class="nav-logo"><img src="images/logo.png" alt="amata"></div>
   <div style="display:flex;gap:10px;align-items:center;margin-left:auto;">
     <button class="nav-belief" onclick="document.getElementById('beliefModal').classList.add('open')">Our belief</button>
-    <button class="nav-cta" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})"><span class="nav-cta-label-full">Request an invite →</span><span class="nav-cta-label-short">Apply</span></button>
-    <button class="nav-cta-mobile" id="navCtaMobile" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})">Request an invite →</button>
+    <button class="nav-cta" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})"><span class="nav-cta-label-full">Request an invite</span><span class="nav-cta-label-short">Apply</span></button>
+    <button class="nav-cta-mobile" id="navCtaMobile" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})">Request an invite</button>
   </div>
 </nav>
 
@@ -880,7 +917,7 @@
   <div class="container-sm">
     <h2>Free <em>tomorrow</em> night?</h2>
     <p>Request an invite. We'll take it from there.</p>
-    <form id="inviteForm" action="https://formspree.io/f/xvzlpzyr" method="POST" style="display:flex;gap:0;max-width:520px;margin:0 auto 16px;background:rgba(255,255,255,0.08);border-radius:100px;padding:6px;border:1px solid rgba(255,255,255,0.12);" onsubmit="handleInvite(event)">
+    <form id="inviteForm" action="https://formspree.io/f/xvzlpzyr" method="POST" class="invite-form" onsubmit="handleInvite(event)">
       <input type="email" name="email" placeholder="Your email address" required style="flex:1;background:transparent;border:none;outline:none;padding:12px 20px;font-size:15px;color:white;font-family:var(--sans);" oninput="this.style.color='white'" />
       <input type="hidden" name="_subject" id="emailSubject" value="Someone just requested an invite on tomorrow by amata" />
       <input type="hidden" name="_next" value="confirmation.html" />
