@@ -313,7 +313,7 @@
   /* Mobile vertical stack */
   .pb-mobile {
     display: none;
-    background: var(--cream);
+    background: #0a0a0a;
     padding: 64px 5%;
   }
   .pb-mobile-header {
@@ -508,7 +508,6 @@
   .belief-close:hover { background: rgba(255,255,255,0.22); }
   @media (max-width: 600px) {
     .belief-modal { padding: 32px 24px; font-size: 15px; }
-    .nav-belief { display: none; }
   }
 </style>
 </head>
@@ -935,7 +934,7 @@ function handleInvite(e) {
   document.getElementById('emailSubject').value = email + ' just requested an invite on tomorrow by amata';
 }
 
-
+function toggleFaq(el) {
   const a = el.nextElementSibling;
   const isOpen = el.classList.contains('open');
   document.querySelectorAll('.faq-q.open').forEach(q => { q.classList.remove('open'); q.nextElementSibling.classList.remove('open'); });
