@@ -53,7 +53,8 @@
     opacity: 1;
     transform: translateY(0);
     max-width: 200px;
-    padding: 8px 18px;
+    padding: 8px 16px;
+    margin-left: 10px;
     pointer-events: auto;
   }
 
@@ -544,8 +545,8 @@
 
 <nav>
   <div class="nav-logo"><img src="images/logo.png" alt="amata"></div>
-  <div style="display:flex;gap:10px;align-items:center;margin-left:auto;">
-    <button class="nav-belief" onclick="document.getElementById('beliefModal').classList.add('open')">Our belief</button>
+  <div style="display:flex;gap:0;align-items:center;margin-left:auto;">
+    <button class="nav-belief" onclick="document.getElementById('beliefModal').classList.add('open')" style="margin-right:10px;">Our belief</button>
     <button class="nav-cta" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})"><span class="nav-cta-label-full">Request invite</span><span class="nav-cta-label-short" style="display:none;">Request invite</span></button>
     <button class="nav-cta-mobile" id="navCtaMobile" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})">Request invite</button>
   </div>
