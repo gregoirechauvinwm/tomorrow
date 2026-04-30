@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>You're in — Amata</title>
+<title>Amata — Request an invite</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -25,10 +25,14 @@
     padding: 40px 24px;
     text-align: center;
   }
-
-  .logo { margin-bottom: 64px; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
+  .logo { margin-bottom: 64px; }
   .logo img { height: 32px; width: auto; }
-
+  .screen { display: none; flex-direction: column; align-items: center; }
+  .screen.active { display: flex; animation: fadeUp 0.5s ease forwards; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
   .badge {
     display: inline-block;
     background: var(--blue-dim);
@@ -39,43 +43,96 @@
     padding: 6px 18px;
     border-radius: 100px;
     margin-bottom: 32px;
-    opacity: 0;
-    animation: fadeUp 0.6s ease 0.2s forwards;
   }
-
   h1 {
     font-family: var(--serif);
-    font-size: clamp(36px, 6vw, 64px);
+    font-size: clamp(28px, 5vw, 48px);
     font-weight: 400;
-    line-height: 1.15;
-    letter-spacing: -1px;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
     color: white;
-    margin-bottom: 24px;
-    max-width: 600px;
-    opacity: 0;
-    animation: fadeUp 0.6s ease 0.3s forwards;
+    margin-bottom: 16px;
+    max-width: 520px;
   }
   h1 em { font-style: italic; color: var(--blue); }
-
-  p {
-    font-size: 17px;
+  .sub {
+    font-size: 16px;
     color: rgba(255,255,255,0.5);
     line-height: 1.7;
-    max-width: 440px;
-    margin-bottom: 56px;
-    opacity: 0;
-    animation: fadeUp 0.6s ease 0.4s forwards;
+    max-width: 400px;
+    margin-bottom: 48px;
   }
-
-  .buttons {
+  .code-row {
     display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-    opacity: 0;
-    animation: fadeUp 0.6s ease 0.5s forwards;
+    gap: 0;
+    max-width: 420px;
+    width: 100%;
+    margin-bottom: 12px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 100px;
+    padding: 6px;
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: border-color 0.2s;
   }
-
+  .code-row.error { border-color: rgba(255,80,80,0.6); }
+  .code-row input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 12px 20px;
+    font-size: 15px;
+    color: white;
+    font-family: var(--sans);
+    letter-spacing: 0.08em;
+  }
+  .code-row input::placeholder { color: rgba(255,255,255,0.35); letter-spacing: 0; }
+  .error-msg {
+    font-size: 13px;
+    color: rgba(255,80,80,0.8);
+    margin-bottom: 28px;
+    min-height: 18px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .error-msg.visible { opacity: 1; }
+  .divider-text {
+    font-size: 12px;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .btn-primary {
+    background: var(--blue);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-family: var(--sans);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-primary:hover { background: #4f60e8; }
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    border: 1.5px solid rgba(255,255,255,0.2);
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-family: var(--sans);
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.6); color: white; }
   .btn-ig {
     display: inline-flex;
     align-items: center;
@@ -93,36 +150,12 @@
   }
   .btn-ig:hover { background: #4f60e8; }
   .btn-ig svg { width: 18px; height: 18px; fill: white; flex-shrink: 0; }
-
-  .btn-home {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: transparent;
-    color: rgba(255,255,255,0.6);
-    border: 1.5px solid rgba(255,255,255,0.2);
-    padding: 14px 28px;
-    border-radius: 100px;
-    font-size: 15px;
-    font-family: var(--sans);
-    cursor: pointer;
-    text-decoration: none;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .btn-home:hover { border-color: rgba(255,255,255,0.6); color: white; }
-
-  .divider {
+  .buttons { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .accent-line {
     width: 1px;
-    height: 80px;
+    height: 60px;
     background: linear-gradient(to bottom, transparent, rgba(100,117,255,0.4), transparent);
-    margin: 56px auto 0;
-    opacity: 0;
-    animation: fadeUp 0.6s ease 0.6s forwards;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
+    margin-top: 48px;
   }
 </style>
 </head>
@@ -132,23 +165,51 @@
     <img src="images/logo.png" alt="Amata">
   </div>
 
-  <div class="badge">You're on the list</div>
-
-  <h1>We'll be in touch<br>before <em>tomorrow night.</em></h1>
-
-  <p>Thank you for requesting an invite. We're reviewing your profile and will reach out shortly with next steps.</p>
-
-  <div class="buttons">
-    <a href="https://www.instagram.com/amata_app/" target="_blank" class="btn-ig">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-      </svg>
-      Follow us on Instagram
-    </a>
-    <a href="index.html" class="btn-home">← Back to home</a>
+  <!-- Screen 1: Invite code -->
+  <div class="screen active" id="screen-code">
+    <div class="badge">One last step</div>
+    <h1>Do you have an<br><em>invite code?</em></h1>
+    <p class="sub">If someone referred you, enter their code below. Otherwise, no worries — just skip ahead.</p>
+    <div class="code-row" id="codeRow">
+      <input type="text" id="codeInput" placeholder="Enter invite code" autocomplete="off" />
+      <button class="btn-primary" onclick="validateCode()">Validate</button>
+    </div>
+    <p class="error-msg" id="codeError">This code is invalid. Please try another.</p>
+    <div class="divider-text">or</div>
+    <button class="btn-outline" onclick="showThankYou()">I don't have an invite code</button>
   </div>
 
-  <div class="divider"></div>
+  <!-- Screen 2: Thank you -->
+  <div class="screen" id="screen-thanks">
+    <div class="badge">You're on the list</div>
+    <h1>Thank you!<br>We'll be in touch <em>shortly.</em></h1>
+    <p class="sub">Thank you for requesting an invite. We will reach out shortly with next steps.</p>
+    <div class="buttons">
+      <a href="https://www.instagram.com/amata_app/" target="_blank" class="btn-ig">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Follow us on Instagram
+      </a>
+      <a href="index.html" class="btn-outline">← Back to home</a>
+    </div>
+    <div class="accent-line"></div>
+  </div>
 
+<script>
+  function validateCode() {
+    document.getElementById('codeRow').classList.add('error');
+    document.getElementById('codeError').classList.add('visible');
+    document.getElementById('codeInput').focus();
+  }
+  document.getElementById('codeInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { validateCode(); return; }
+    document.getElementById('codeRow').classList.remove('error');
+    document.getElementById('codeError').classList.remove('visible');
+  });
+  function showThankYou() {
+    document.getElementById('screen-code').classList.remove('active');
+    document.getElementById('screen-thanks').classList.add('active');
+    window.scrollTo(0, 0);
+  }
+</script>
 </body>
 </html>
