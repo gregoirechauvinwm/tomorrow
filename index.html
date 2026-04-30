@@ -51,6 +51,20 @@
     pointer-events: auto;
   }
 
+  .nav-belief {
+    background: transparent;
+    color: #ffffff;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    padding: 10px 22px;
+    border-radius: 100px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: var(--sans);
+    transition: border-color 0.2s, background 0.2s;
+    line-height: 1.4;
+  }
+  .nav-belief:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.5); }
+
   @media (max-width: 600px) {
     nav { padding: 0 16px; }
     .nav-logo img { height: 28px; }
@@ -58,7 +72,7 @@
     .nav-cta-label-short { display: none; }
     .nav-cta { display: none; }
     .nav-belief { font-size: 13px; padding: 8px 16px; line-height: 1.4; }
-    .nav-cta-mobile { font-size: 13px; padding: 8px 16px; }
+    .nav-cta-mobile { font-size: 13px; padding: 8px 16px; line-height: 1.4; }
   }
 
   section { padding: 100px 5%; }
@@ -1168,6 +1182,7 @@ document.querySelectorAll('.pb-mobile-card').forEach(c => pbMobileObserver.obser
   if (!btn) return;
   const hero = document.querySelector('.hero-wrap');
   window.addEventListener('scroll', () => {
+    if (window.innerWidth > 600) return;
     if (!hero) return;
     const heroBottom = hero.getBoundingClientRect().bottom;
     if (heroBottom < 0) {
