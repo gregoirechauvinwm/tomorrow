@@ -24,15 +24,36 @@
   nav { position: sticky; top: 0; z-index: 100; background: #0a0a0a; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0 5%; display: flex; align-items: center; justify-content: space-between; height: 52px; }
   .nav-logo img { height: 44px; width: auto; display: block; }
   .nav-logo { font-family: var(--serif); font-size: 22px; letter-spacing: -0.5px; color: var(--charcoal); }
-  .nav-cta { background: #ffffff; color: #0a0a0a; border: none; padding: 10px 22px; border-radius: 100px; font-size: 14px; cursor: pointer; font-family: var(--sans); transition: background 0.2s; position: relative; overflow: hidden; }
+  .nav-cta { background: #ffffff; color: #0a0a0a; border: none; padding: 10px 22px; border-radius: 100px; font-size: 14px; cursor: pointer; font-family: var(--sans); transition: background 0.2s, opacity 0.4s, transform 0.4s; position: relative; overflow: hidden; }
   .nav-cta:hover { background: rgba(255,255,255,0.85); }
-  .nav-cta:hover { background: var(--terracotta); }
   .nav-cta-label-short { display: none; }
+
+  /* scroll-triggered apply button — hidden by default on mobile */
+  .nav-cta-mobile {
+    display: none;
+    background: #ffffff;
+    color: #0a0a0a;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: var(--sans);
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    pointer-events: none;
+  }
+  .nav-cta-mobile.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
   @media (max-width: 600px) {
     nav { padding: 0 16px; }
     .nav-logo img { height: 28px; }
     .nav-cta-label-full { display: none; }
-    .nav-cta-label-short { display: inline; }
+    .nav-cta-label-short { display: none; } /* hidden until scrolled */
+    .nav-cta { display: none; } /* hide desktop CTA on mobile */
+    .nav-belief { font-size: 12px; padding: 8px 14px; }
+    .nav-cta-mobile { display: block; }
   }
 
   section { padding: 100px 5%; }
@@ -498,6 +519,7 @@
   <div style="display:flex;gap:10px;align-items:center;">
     <button class="nav-belief" onclick="document.getElementById('beliefModal').classList.add('open')">Our belief</button>
     <button class="nav-cta" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})"><span class="nav-cta-label-full">Request an invite →</span><span class="nav-cta-label-short">Apply</span></button>
+    <button class="nav-cta-mobile" id="navCtaMobile" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})">Request an invite →</button>
   </div>
 </nav>
 
@@ -526,7 +548,7 @@
     <source src="nyc.mp4" type="video/mp4">
   </video>
   <!-- Dark overlay -->
-  <div style="position:absolute;inset:0;background:rgba(10,20,14,0.55);z-index:1;"></div>
+  <div style="position:absolute;inset:0;background:rgba(0,0,0,0.3);z-index:1;"></div>
   <div class="container" style="position:relative;z-index:2;">
     <div style="display:inline-block;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.8);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:6px 18px;border-radius:100px;margin-bottom:32px;">The next chapter of Amata</div>
     <h1 style="color:white;">A blind date<br>with someone <em>great.</em><br>Tomorrow.</h1>
@@ -1094,6 +1116,22 @@ const pbMobileObserver = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.15 });
 document.querySelectorAll('.pb-mobile-card').forEach(c => pbMobileObserver.observe(c));
+
+// ── Mobile nav CTA: show after scrolling past hero ──
+(function() {
+  const btn = document.getElementById('navCtaMobile');
+  if (!btn) return;
+  const hero = document.querySelector('.hero-wrap');
+  window.addEventListener('scroll', () => {
+    if (!hero) return;
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    if (heroBottom < 0) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  }, { passive: true });
+})();
 
 // ── Pola strip: per-image parallax scroll ──
 (function() {
