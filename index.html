@@ -515,7 +515,7 @@
 
 <nav>
   <div class="nav-logo"><img src="images/logo.png" alt="amata"></div>
-  <div style="display:flex;gap:10px;align-items:center;">
+  <div style="display:flex;gap:10px;align-items:center;margin-left:auto;">
     <button class="nav-belief" onclick="document.getElementById('beliefModal').classList.add('open')">Our belief</button>
     <button class="nav-cta" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})"><span class="nav-cta-label-full">Request an invite →</span><span class="nav-cta-label-short">Apply</span></button>
     <button class="nav-cta-mobile" id="navCtaMobile" onclick="document.getElementById('cta-final').scrollIntoView({behavior:'smooth'})">Request an invite →</button>
@@ -542,9 +542,8 @@
 <div class="hero-wrap">
 <section class="hero" style="position:relative;">
   <!-- Video background -->
-  <video autoplay muted loop playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
-    <source media="(max-width:600px)" src="nyc-mobile.mp4" type="video/mp4">
-    <source src="nyc.mp4" type="video/mp4">
+  <video id="heroVideo" autoplay muted loop playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
+    <source id="heroVideoSrc" src="nyc.mp4" type="video/mp4">
   </video>
   <!-- Dark overlay -->
   <div style="position:absolute;inset:0;background:rgba(0,0,0,0.3);z-index:1;"></div>
@@ -923,6 +922,18 @@
 </footer>
 
 <script>
+// ── Mobile video swap ──
+(function() {
+  if (window.innerWidth <= 600) {
+    const src = document.getElementById('heroVideoSrc');
+    const video = document.getElementById('heroVideo');
+    if (src && video) {
+      src.src = 'nyc-mobile.mp4';
+      video.load();
+    }
+  }
+})();
+
 // Lock viewport height to prevent iOS browser chrome jump
 (function() {
   var vh = window.innerHeight * 0.01;
