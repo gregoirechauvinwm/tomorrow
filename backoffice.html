@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Back Office — Tomorrow by Amata</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --blue: #6475ff;
+    --blue-dark: #4f60e8;
+    --white: #ffffff;
+    --muted: rgba(255,255,255,0.5);
+    --border: rgba(255,255,255,0.1);
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --serif: Georgia, serif;
+  }
+  body { font-family: var(--sans); background: var(--bg); color: var(--white); min-height: 100vh; }
+
+  #loginScreen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+  .login-box { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 40px; width: 100%; max-width: 380px; }
+  .login-box img { height: 32px; margin-bottom: 28px; }
+  .login-box h2 { font-family: var(--serif); font-weight: 400; font-size: 24px; margin-bottom: 24px; color: var(--white); }
+  .login-box input { width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 16px; font-family: var(--sans); outline: none; margin-bottom: 12px; background: var(--bg); color: var(--white); }
+  .login-box input:focus { border-color: var(--blue); }
+  .login-box input::placeholder { color: var(--muted); }
+  .login-box button { width: 100%; padding: 14px; background: var(--blue); color: white; border: none; border-radius: 100px; font-size: 15px; font-family: var(--sans); cursor: pointer; }
+  .login-box button:hover { background: var(--blue-dark); }
+  .login-error { color: #f87171; font-size: 13px; margin-top: 8px; display: none; }
+
+  #app { display: none; }
+  header { background: #111; border-bottom: 1px solid var(--border); padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  header img { height: 28px; }
+  .header-right { display: flex; align-items: center; gap: 20px; }
+  .signup-count { font-size: 13px; color: var(--muted); }
+  #logoutBtn { background: rgba(255,255,255,0.08); color: white; border: none; padding: 7px 16px; border-radius: 100px; font-size: 13px; cursor: pointer; font-family: var(--sans); }
+  #logoutBtn:hover { background: rgba(255,255,255,0.15); }
+
+  .main-wrap { padding: 32px; max-width: 1400px; margin: 0 auto; }
+
+  .stats-bar { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; flex: 1; min-width: 150px; }
+  .stat-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .stat-value { font-family: var(--serif); font-size: 32px; font-weight: 400; color: var(--white); }
+
+  .controls { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+  .search-input { padding: 10px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-family: var(--sans); outline: none; background: var(--surface); color: var(--white); min-width: 220px; }
+  .search-input:focus { border-color: var(--blue); }
+  .search-input::placeholder { color: var(--muted); }
+  .filter-select { padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-family: var(--sans); outline: none; background: var(--surface); color: var(--white); cursor: pointer; }
+  .filter-select option { background: #1a1a1a; }
+  .export-btn { margin-left: auto; padding: 10px 20px; background: var(--blue); color: white; border: none; border-radius: 100px; font-size: 13px; font-family: var(--sans); cursor: pointer; }
+  .export-btn:hover { background: var(--blue-dark); }
+
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  thead { background: rgba(255,255,255,0.04); }
+  th { padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 14px 16px; font-size: 13px; color: var(--white); border-bottom: 1px solid var(--border); vertical-align: top; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.03); }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 500; }
+  .badge-applied { background: rgba(100,117,255,0.2); color: #a5b4fc; }
+  .badge-pending { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+  .badge-warn { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .row-link { cursor: pointer; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 24px; }
+  .modal-overlay.open { display: flex; }
+  .modal-box { background: #1a1a1a; border: 1px solid var(--border); border-radius: 20px; padding: 36px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; position: relative; }
+  .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--muted); }
+  .modal-name { font-family: var(--serif); font-size: 24px; font-weight: 400; margin-bottom: 4px; color: var(--white); }
+  .modal-email { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+  .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .modal-field label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px; }
+  .modal-field span { font-size: 14px; color: var(--white); line-height: 1.5; }
+  .modal-field.full { grid-column: 1 / -1; }
+  .modal-divider { height: 1px; background: var(--border); margin: 20px 0; grid-column: 1/-1; }
+  .loading { text-align: center; padding: 60px; color: var(--muted); font-size: 15px; }
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <img src="images/logo.png" alt="Tomorrow by Amata">
+    <h2>Back Office</h2>
+    <input type="password" id="passwordInput" placeholder="Password" onkeydown="if(event.key==='Enter')login()">
+    <button onclick="login()">Sign in</button>
+    <p class="login-error" id="loginError">Incorrect password.</p>
+  </div>
+</div>
+
+<div id="app">
+  <header>
+    <img src="images/logo.png" alt="Tomorrow by Amata">
+    <div class="header-right">
+      <span class="signup-count" id="signupCount"></span>
+      <button id="logoutBtn" onclick="logout()">Sign out</button>
+    </div>
+  </header>
+  <div class="main-wrap">
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-card"><div class="stat-label">Total applicants</div><div class="stat-value" id="statTotal">—</div></div>
+      <div class="stat-card"><div class="stat-label">Applied</div><div class="stat-value" id="statApplied">—</div></div>
+      <div class="stat-card"><div class="stat-label">This week</div><div class="stat-value" id="statWeek">—</div></div>
+      <div class="stat-card"><div class="stat-label">In progress</div><div class="stat-value" id="statProgress">—</div></div>
+    </div>
+    <div class="controls">
+      <input class="search-input" id="searchInput" placeholder="Search by name or email…" oninput="renderTable()">
+      <select class="filter-select" id="filterGender" onchange="renderTable()">
+        <option value="">All genders</option>
+        <option value="man">Men</option>
+        <option value="woman">Women</option>
+        <option value="nonbinary">Non-binary</option>
+      </select>
+      <select class="filter-select" id="filterLocation" onchange="renderTable()">
+        <option value="">All locations</option>
+        <option value="lower-manhattan">Lower Manhattan</option>
+        <option value="midtown">Midtown</option>
+        <option value="upper-manhattan">Upper Manhattan</option>
+        <option value="brooklyn">Brooklyn</option>
+        <option value="queens">Queens</option>
+        <option value="bronx">Bronx</option>
+        <option value="new-jersey">New Jersey</option>
+        <option value="long-island">Long Island</option>
+        <option value="staten-island">Staten Island</option>
+      </select>
+      <select class="filter-select" id="filterStatus" onchange="renderTable()">
+        <option value="">All statuses</option>
+        <option value="applied">Applied</option>
+        <option value="incomplete">In progress</option>
+      </select>
+      <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+    </div>
+    <div class="table-wrap">
+      <p class="loading" id="loadingMsg">Loading…</p>
+      <table id="signupsTable" style="display:none;">
+        <thead>
+          <tr>
+            <th>Date</th><th>Step</th><th>Name</th><th>Email</th><th>Phone</th>
+            <th>Birthdate</th><th>Gender</th><th>Looking for</th>
+            <th>Location</th><th>Social</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <p class="loading" id="emptyMsg" style="display:none;">No applicants found.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Detail modal -->
+<div class="modal-overlay" id="detailModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+let authToken = sessionStorage.getItem('bo_token') || '';
+let allSignups = [];
+
+function login() {
+  const pw = document.getElementById('passwordInput').value;
+  if (!pw) return;
+  authToken = pw;
+  loadSignups();
+}
+
+function logout() {
+  authToken = '';
+  sessionStorage.removeItem('bo_token');
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('passwordInput').value = '';
+}
+
+async function loadSignups() {
+  try {
+    const res = await fetch('/api/get-signups', { headers: { 'Authorization': 'Bearer ' + authToken } });
+    if (res.status === 401) {
+      document.getElementById('loginError').style.display = 'block';
+      return;
+    }
+    const data = await res.json();
+    allSignups = data.signups || [];
+    sessionStorage.setItem('bo_token', authToken);
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    updateStats();
+    renderTable();
+    document.getElementById('loadingMsg').style.display = 'none';
+    document.getElementById('signupsTable').style.display = 'table';
+  } catch (err) {
+    document.getElementById('loginError').textContent = 'Connection error. Try again.';
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+function updateStats() {
+  const total = allSignups.length;
+  const applied = allSignups.filter(s => s.payment_status === 'applied').length;
+  const weekAgo = new Date(Date.now() - 7 * 86400000);
+  const week = allSignups.filter(s => new Date(s.created_at) > weekAgo).length;
+  const progress = allSignups.filter(s => s.payment_status !== 'applied' && s.last_step >= 1).length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statApplied').textContent = applied;
+  document.getElementById('statWeek').textContent = week;
+  document.getElementById('statProgress').textContent = progress;
+  document.getElementById('signupCount').textContent = total + ' applicants';
+}
+
+function renderTable() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const gender = document.getElementById('filterGender').value;
+  const location = document.getElementById('filterLocation').value;
+  const status = document.getElementById('filterStatus').value;
+
+  let filtered = allSignups.filter(s => {
+    const matchSearch = !search || (s.first_name||'').toLowerCase().includes(search) || (s.email||'').toLowerCase().includes(search);
+    const matchGender = !gender || s.gender === gender;
+    const matchLocation = !location || s.location === location;
+    const matchStatus = !status || s.payment_status === status;
+    return matchSearch && matchGender && matchLocation && matchStatus;
+  });
+
+  const tbody = document.getElementById('tableBody');
+  if (filtered.length === 0) {
+    document.getElementById('signupsTable').style.display = 'none';
+    document.getElementById('emptyMsg').style.display = 'block';
+    return;
+  }
+  document.getElementById('signupsTable').style.display = 'table';
+  document.getElementById('emptyMsg').style.display = 'none';
+
+  tbody.innerHTML = filtered.map(s => {
+    const socials = parseSocials(s.social_media);
+    const socialHtml = socials.map(soc => socialLink(soc)).join(' ') || '—';
+    const lookingFor = [s.meet_gender, (s.age_min && s.age_max) ? `${s.age_min}–${s.age_max}` : null].filter(Boolean).join(', ') || '—';
+    return `
+      <tr class="row-link" onclick="showDetail(${s.id})">
+        <td>${formatDate(s.created_at)}</td>
+        <td>Step ${s.last_step || 0}</td>
+        <td><strong>${s.first_name || '—'}</strong></td>
+        <td>${s.email || '—'}</td>
+        <td>${s.country_code ? s.country_code.replace(/-CA/,'') : ''} ${s.phone || '—'}</td>
+        <td>${s.birthdate || '—'}</td>
+        <td>${s.gender || '—'}</td>
+        <td>${lookingFor}</td>
+        <td>${s.location || '—'}</td>
+        <td onclick="event.stopPropagation()">${socialHtml}</td>
+        <td><span class="badge ${statusClass(s)}">${statusLabel(s)}</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function showDetail(id) {
+  const s = allSignups.find(r => r.id === id);
+  if (!s) return;
+  const socials = parseSocials(s.social_media);
+  const socialHtml = socials.length ? socials.map(soc => socialLink(soc)).join('<br>') : '—';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-name">${s.first_name || 'Unknown'}</div>
+    <div class="modal-email">${s.email || ''}</div>
+    <div class="modal-grid">
+      <div class="modal-field"><label>Phone</label><span>${s.country_code ? s.country_code.replace(/-CA/,'') : ''} ${s.phone || '—'}</span></div>
+      <div class="modal-field"><label>Birthdate</label><span>${s.birthdate || '—'}</span></div>
+      <div class="modal-field"><label>Gender</label><span>${s.gender || '—'}</span></div>
+      <div class="modal-field"><label>Looking for</label><span>${s.meet_gender || '—'}</span></div>
+      <div class="modal-field"><label>Age range sought</label><span>${s.age_min || '—'} – ${s.age_max || '—'}</span></div>
+      <div class="modal-field"><label>Location</label><span>${s.location || '—'}</span></div>
+      <div class="modal-field"><label>Education</label><span>${s.education || '—'}</span></div>
+      <div class="modal-field"><label>Children</label><span>${s.children || '—'}</span></div>
+      <div class="modal-field"><label>Ethnicity</label><span>${s.ethnicity || '—'}</span></div>
+      <div class="modal-field"><label>Religion</label><span>${s.religion || '—'}</span></div>
+      <div class="modal-field full"><label>Social media</label><span>${socialHtml}</span></div>
+      <div class="modal-divider"></div>
+      <div class="modal-field"><label>Status</label><span class="badge ${statusClass(s)}">${statusLabel(s)}</span></div>
+      <div class="modal-field"><label>Last step</label><span>Step ${s.last_step || 0} / 12</span></div>
+      <div class="modal-field"><label>Applied</label><span>${formatDate(s.created_at)}</span></div>
+      <div class="modal-field"><label>Last updated</label><span>${formatDate(s.updated_at)}</span></div>
+    </div>
+  `;
+  document.getElementById('detailModal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('detailModal').classList.remove('open'); }
+
+function parseSocials(raw) {
+  if (!raw) return [];
+  try { return typeof raw === 'string' ? JSON.parse(raw) : raw; } catch { return []; }
+}
+
+function socialLink(soc) {
+  const h = soc.handle || '';
+  const p = (soc.platform || '').toLowerCase();
+  let url = '';
+  if (p === 'instagram') url = 'https://instagram.com/' + h.replace('@','');
+  else if (p === 'tiktok') url = 'https://tiktok.com/@' + h.replace('@','');
+  else if (p === 'linkedin') url = h.startsWith('http') ? h : 'https://' + h;
+  else url = h.startsWith('http') ? h : '';
+  const icon = p === 'instagram' ? '📸' : p === 'tiktok' ? '🎵' : p === 'linkedin' ? '💼' : '🔗';
+  const label = icon + ' ' + h;
+  return url ? `<a href="${url}" target="_blank" style="font-size:12px;color:var(--blue);text-decoration:none;white-space:nowrap;" onclick="event.stopPropagation()">${label}</a>` : `<span style="font-size:12px;">${label}</span>`;
+}
+
+function statusClass(s) {
+  if (s.payment_status === 'applied') return 'badge-applied';
+  if (s.last_step >= 10) return 'badge-warn';
+  return 'badge-pending';
+}
+
+function statusLabel(s) {
+  if (s.payment_status === 'applied') return 'Applied';
+  if (s.last_step >= 1) return `Step ${s.last_step}`;
+  return 'Started';
+}
+
+function formatDate(ts) {
+  if (!ts) return '—';
+  return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function exportCSV() {
+  const cols = ['id','created_at','first_name','email','phone','country_code','birthdate','gender','meet_gender','age_min','age_max','education','children','ethnicity','religion','social_media','location','payment_status','last_step'];
+  const header = cols.join(',');
+  const rows = allSignups.map(s => cols.map(c => JSON.stringify(s[c] || '')).join(','));
+  const csv = [header, ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'tomorrow-applicants-' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click();
+}
+
+if (authToken) loadSignups();
+</script>
+</body>
+</html>

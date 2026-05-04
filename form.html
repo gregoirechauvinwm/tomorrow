@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Apply — Tomorrow by Amata</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --blue: #6475ff;
+    --blue-dim: rgba(100,117,255,0.15);
+    --blue-dark: #4f60e8;
+    --white: #ffffff;
+    --muted: rgba(255,255,255,0.5);
+    --border: rgba(255,255,255,0.12);
+    --serif: Georgia, 'Times New Roman', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  html, body { height: 100%; height: 100svh; overflow: hidden; overscroll-behavior: none; background: var(--bg); }
+  body { font-family: var(--sans); color: var(--white); display: flex; flex-direction: column; height: 100vh; height: 100svh; }
+
+  nav { flex-shrink: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; z-index: 100; }
+  .nav-logo img { height: 32px; width: auto; display: block; }
+
+  .progress-wrap { flex-shrink: 0; height: 2px; background: rgba(255,255,255,0.08); }
+  .progress-bar { height: 100%; background: var(--blue); transition: width 0.5s cubic-bezier(0.25,0.46,0.45,0.94); width: 0%; }
+
+  main { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+  .form-shell { flex: 1; overflow: hidden; display: flex; flex-direction: column; max-width: 560px; width: 100%; margin: 0 auto; padding: 0 20px; position: relative; }
+
+  .step { display: none; flex-direction: column; flex: 1; overflow: hidden; animation: fadeUp 0.3s ease both; }
+  .step.active { display: flex; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  .step-header { flex-shrink: 0; padding: 24px 0 20px; }
+  .step-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 6px; }
+  .step-title { font-family: var(--serif); font-size: clamp(22px,5vw,30px); font-weight: 400; line-height: 1.2; color: var(--white); }
+
+  .step-body { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding-bottom: 100px; }
+  .step-body::-webkit-scrollbar { display: none; }
+
+  /* Inputs */
+  input[type="date"], input[type="text"], input[type="url"], input[type="email"], input[type="tel"] {
+    width: 100%; padding: 16px 18px; border: 1.5px solid var(--border); border-radius: 12px;
+    font-size: 16px; font-family: var(--sans); background: var(--surface); color: var(--white);
+    outline: none; transition: border-color 0.2s; -webkit-appearance: none;
+  }
+  input:focus { border-color: var(--blue); }
+  input::placeholder { color: var(--muted); }
+  .phone-wrap { display: flex; gap: 0; border: 1.5px solid var(--border); border-radius: 12px; background: var(--surface); overflow: hidden; transition: border-color 0.2s; }
+  .phone-wrap:focus-within { border-color: var(--blue); }
+  .country-select {
+    width: auto; min-width: 90px; max-width: 110px; border: none; border-right: 1.5px solid var(--border);
+    border-radius: 0; background: rgba(255,255,255,0.06); padding: 16px 8px 16px 12px;
+    font-size: 15px; font-family: var(--sans); cursor: pointer; outline: none; flex-shrink: 0;
+    -webkit-appearance: none; appearance: none; color: var(--white);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23ffffff80'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 8px center; margin-bottom: 0;
+  }
+  .phone-wrap input[type="tel"] { border: none; border-radius: 0; flex: 1; padding: 16px 14px; font-size: 16px; background: var(--surface); outline: none; color: var(--white); }
+  .field-error { font-size: 12px; color: #f87171; margin-top: 4px; min-height: 16px; display: block; }
+  .input-label { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+  .input-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
+  select { width: 100%; padding: 16px 18px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 16px; font-family: var(--sans); background: var(--surface); color: var(--white); outline: none; cursor: pointer; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ffffff80' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; margin-bottom: 12px; }
+  select:focus { border-color: var(--blue); }
+  select option { background: #1a1a1a; color: white; }
+
+  /* Choices */
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border: 1.5px solid var(--border); border-radius: 12px; cursor: pointer; background: var(--surface); transition: border-color 0.2s, background 0.2s; font-size: 15px; color: var(--white); user-select: none; }
+  .choice:hover { border-color: var(--blue); background: var(--blue-dim); }
+  .choice.selected { border-color: var(--blue); background: var(--blue-dim); }
+  .choice-dot { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: border-color 0.2s, background 0.2s; }
+  .choice.selected .choice-dot { border-color: var(--blue); background: var(--blue); }
+  .choice.selected .choice-dot::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: white; }
+  .choice.multi .choice-dot { border-radius: 6px; }
+  .choice.multi.selected .choice-dot::after { content: '✓'; font-size: 11px; color: white; border-radius: 0; width: auto; height: auto; background: transparent; }
+
+  /* Range */
+  .range-wrap { margin-top: 8px; }
+  .range-sentence { font-size: 18px; color: var(--white); margin-bottom: 28px; line-height: 1.5; }
+  .range-sentence span { color: var(--blue); font-family: var(--serif); }
+  .slider-track { position: relative; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 18px 0 0; }
+  .slider-fill { position: absolute; height: 100%; background: var(--blue); border-radius: 2px; top: 0; }
+  .dual-range { position: relative; height: 4px; margin-top: -4px; }
+  input[type="range"] { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; -webkit-appearance: none; background: transparent; pointer-events: none; margin: 0; padding: 0; height: 44px; touch-action: none; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%; background: var(--bg); border: 2px solid var(--blue); box-shadow: 0 2px 8px rgba(0,0,0,0.4); cursor: pointer; pointer-events: all; touch-action: pan-x; }
+  input[type="range"]::-webkit-slider-runnable-track { background: transparent; }
+  .range-labels { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  /* Agree */
+  .agree-box { background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px; padding: 24px; }
+  .agree-text { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+
+  /* Social */
+  .social-field { display: none; }
+  .social-field.visible { display: flex; flex-direction: column; gap: 12px; }
+  .learn-more { font-size: 13px; color: var(--muted); margin-top: 16px; }
+  .learn-more a { color: var(--muted); text-decoration: underline; cursor: pointer; }
+
+  /* Bottom buttons */
+  .btn-wrap { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 560px; display: flex; gap: 12px; align-items: center; padding: 12px 24px 32px; background: linear-gradient(to top, var(--bg) 70%, transparent); z-index: 50; }
+  .btn-back { width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--surface); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+  .btn-back svg { stroke: var(--muted); fill: none; stroke-width: 1.5; width: 18px; height: 18px; }
+  .btn-next { flex: 1; padding: 16px 32px; background: var(--blue); color: white; border: none; border-radius: 100px; font-size: 15px; font-family: var(--sans); cursor: pointer; transition: background 0.2s; }
+  .btn-next:hover { background: var(--blue-dark); }
+  .btn-next:disabled { background: rgba(255,255,255,0.1); color: var(--muted); cursor: not-allowed; }
+
+  /* Popup */
+  .popup-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 24px; }
+  .popup-overlay.open { display: flex; }
+  .popup-box { background: #1a1a1a; border: 1px solid var(--border); border-radius: 20px; padding: 36px; max-width: 480px; width: 100%; animation: fadeUp 0.3s ease both; }
+  .popup-title { font-family: var(--serif); font-size: 22px; font-weight: 400; margin-bottom: 14px; color: var(--white); }
+  .popup-body { font-size: 14px; color: var(--muted); line-height: 1.8; }
+  .popup-btn { margin-top: 24px; width: 100%; padding: 14px; background: var(--blue); color: white; border: none; border-radius: 100px; font-size: 15px; font-family: var(--sans); cursor: pointer; }
+
+  /* Confirm screen */
+  .confirm-wrap { text-align: center; padding: 40px 0; }
+  .confirm-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--blue-dim); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+  .confirm-icon svg { stroke: var(--blue); fill: none; stroke-width: 1.5; width: 28px; height: 28px; }
+  .confirm-title { font-family: var(--serif); font-size: 30px; font-weight: 400; margin-bottom: 12px; color: var(--white); }
+  .confirm-sub { font-size: 16px; color: var(--muted); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="images/logo.png" alt="Tomorrow by Amata"></a>
+</nav>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+
+<main>
+<div class="form-shell">
+
+  <!-- Step 1: Birthdate -->
+  <div class="step active" id="step-1">
+    <div class="step-header"><p class="step-label">About you</p><h2 class="step-title">What's your birth date?</h2></div>
+    <div class="step-body">
+      <div style="display:flex;gap:10px;align-items:flex-end;margin-top:8px;">
+        <div style="display:flex;flex-direction:column;gap:4px;flex:1;"><span class="input-label">Month</span><input type="tel" id="bMonth" maxlength="2" placeholder="MM" oninput="onBdayInput(this,'bDay',2)" style="text-align:center;font-size:22px;letter-spacing:2px;"></div>
+        <span style="font-size:22px;color:var(--muted);padding-bottom:14px;">/</span>
+        <div style="display:flex;flex-direction:column;gap:4px;flex:1;"><span class="input-label">Day</span><input type="tel" id="bDay" maxlength="2" placeholder="DD" oninput="onBdayInput(this,'bYear',2)" style="text-align:center;font-size:22px;letter-spacing:2px;"></div>
+        <span style="font-size:22px;color:var(--muted);padding-bottom:14px;">/</span>
+        <div style="display:flex;flex-direction:column;gap:4px;flex:2;"><span class="input-label">Year</span><input type="tel" id="bYear" maxlength="4" placeholder="YYYY" oninput="onBdayInput(this,null,4)" style="text-align:center;font-size:22px;letter-spacing:2px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Gender -->
+  <div class="step" id="step-2">
+    <div class="step-header"><p class="step-label">About you</p><h2 class="step-title">How do you identify?</h2></div>
+    <div class="step-body"><div class="choices" id="gender">
+      <div class="choice" data-value="man" onclick="selectSingle(this)"><div class="choice-dot"></div> I am a man</div>
+      <div class="choice" data-value="woman" onclick="selectSingle(this)"><div class="choice-dot"></div> I am a woman</div>
+      <div class="choice" data-value="nonbinary" onclick="selectSingle(this)"><div class="choice-dot"></div> I am non-binary</div>
+    </div></div>
+  </div>
+
+  <!-- Step 3: Who to meet -->
+  <div class="step" id="step-3">
+    <div class="step-header"><p class="step-label">Your preferences</p><h2 class="step-title">Who do you want to meet?</h2></div>
+    <div class="step-body"><div class="choices" id="meetGender">
+      <div class="choice multi" data-value="men" onclick="selectMulti(this)"><div class="choice-dot"></div> Men</div>
+      <div class="choice multi" data-value="women" onclick="selectMulti(this)"><div class="choice-dot"></div> Women</div>
+      <div class="choice multi" data-value="nonbinary" onclick="selectMulti(this)"><div class="choice-dot"></div> Non-binary people</div>
+    </div></div>
+  </div>
+
+  <!-- Step 4: Age range -->
+  <div class="step" id="step-4">
+    <div class="step-header"><p class="step-label">Your preferences</p><h2 class="step-title">How old should they be?</h2></div>
+    <div class="step-body">
+      <div class="range-wrap">
+        <p class="range-sentence">Between <span id="minVal">25</span> and <span id="maxVal">45</span> years old</p>
+        <div style="position:relative;margin-bottom:16px;">
+          <div class="slider-track"><div class="slider-fill" id="sliderFill"></div></div>
+          <div class="dual-range">
+            <input type="range" id="minAge" min="18" max="70" value="25">
+            <input type="range" id="maxAge" min="18" max="70" value="45">
+          </div>
+        </div>
+        <div class="range-labels"><span>18</span><span>70+</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5: Education -->
+  <div class="step" id="step-5">
+    <div class="step-header"><p class="step-label">About you</p><h2 class="step-title">What's your education level?</h2></div>
+    <div class="step-body"><div class="choices" id="education">
+      <div class="choice" data-value="highschool" onclick="selectSingle(this)"><div class="choice-dot"></div> High school / Secondary school</div>
+      <div class="choice" data-value="undergrad" onclick="selectSingle(this)"><div class="choice-dot"></div> Undergrad</div>
+      <div class="choice" data-value="postgrad" onclick="selectSingle(this)"><div class="choice-dot"></div> Postgrad</div>
+      <div class="choice" data-value="prefer-not" onclick="selectSingle(this)"><div class="choice-dot"></div> Prefer not to say</div>
+    </div></div>
+  </div>
+
+  <!-- Step 6: Children -->
+  <div class="step" id="step-6">
+    <div class="step-header"><p class="step-label">About you</p><h2 class="step-title">Do you have children?</h2></div>
+    <div class="step-body"><div class="choices" id="children">
+      <div class="choice" data-value="no" onclick="selectSingle(this)"><div class="choice-dot"></div> I don't have children</div>
+      <div class="choice" data-value="yes" onclick="selectSingle(this)"><div class="choice-dot"></div> I have children</div>
+    </div></div>
+  </div>
+
+  <!-- Step 7: Ethnicity -->
+  <div class="step" id="step-7">
+    <div class="step-header"><p class="step-label">About you</p><h2 class="step-title">What's your ethnicity?</h2></div>
+    <div class="step-body">
+      <div class="choices" id="ethnicity">
+        <div class="choice multi" data-value="black" onclick="selectMulti(this)"><div class="choice-dot"></div> Black / African Descent</div>
+        <div class="choice multi" data-value="caucasian" onclick="selectMulti(this)"><div class="choice-dot"></div> Caucasian / White</div>
+        <div class="choice multi" data-value="eastasian" onclick="selectMulti(this)"><div class="choice-dot"></div> East Asian</div>
+        <div class="choice multi" data-value="hispanic" onclick="selectMulti(this)"><div class="choice-dot"></div> Hispanic / Latino</div>
+        <div class="choice multi" data-value="middleeastern" onclick="selectMulti(this)"><div class="choice-dot"></div> Middle Eastern</div>
+        <div class="choice multi" data-value="native" onclick="selectMulti(this)"><div class="choice-dot"></div> Native American</div>
+        <div class="choice multi" data-value="pacific" onclick="selectMulti(this)"><div class="choice-dot"></div> Pacific Islander</div>
+        <div class="choice multi" data-value="southasian" onclick="selectMulti(this)"><div class="choice-dot"></div> South Asian</div>
+        <div class="choice multi" data-value="prefer-not" onclick="selectMulti(this)"><div class="choice-dot"></div> Prefer not to say</div>
+      </div>
+      <p class="learn-more">Wondering why we ask this? <a onclick="document.getElementById('ethnicityPopup').classList.add('open')">Learn more</a></p>
+    </div>
+  </div>
+
+  <!-- Step 8: Religion -->
+  <div class="step" id="step-8">
+    <div class="step-header"><p class="step-label">About you</p><h2 class="step-title">What are your religious beliefs?</h2></div>
+    <div class="step-body"><div class="choices" id="religion">
+      <div class="choice multi" data-value="agnostic" onclick="selectMulti(this)"><div class="choice-dot"></div> Agnostic</div>
+      <div class="choice multi" data-value="atheist" onclick="selectMulti(this)"><div class="choice-dot"></div> Atheist</div>
+      <div class="choice multi" data-value="buddhist" onclick="selectMulti(this)"><div class="choice-dot"></div> Buddhist</div>
+      <div class="choice multi" data-value="catholic" onclick="selectMulti(this)"><div class="choice-dot"></div> Christian — Catholic</div>
+      <div class="choice multi" data-value="protestant" onclick="selectMulti(this)"><div class="choice-dot"></div> Christian — Protestant</div>
+      <div class="choice multi" data-value="orthodox" onclick="selectMulti(this)"><div class="choice-dot"></div> Christian — Orthodox</div>
+      <div class="choice multi" data-value="christian-other" onclick="selectMulti(this)"><div class="choice-dot"></div> Christian — Other</div>
+      <div class="choice multi" data-value="hindu" onclick="selectMulti(this)"><div class="choice-dot"></div> Hindu</div>
+      <div class="choice multi" data-value="jewish" onclick="selectMulti(this)"><div class="choice-dot"></div> Jewish</div>
+      <div class="choice multi" data-value="muslim" onclick="selectMulti(this)"><div class="choice-dot"></div> Muslim</div>
+      <div class="choice multi" data-value="sikh" onclick="selectMulti(this)"><div class="choice-dot"></div> Sikh</div>
+      <div class="choice multi" data-value="spiritual" onclick="selectMulti(this)"><div class="choice-dot"></div> Spiritual</div>
+      <div class="choice multi" data-value="other" onclick="selectMulti(this)"><div class="choice-dot"></div> Other</div>
+      <div class="choice multi" data-value="prefer-not" onclick="selectMulti(this)"><div class="choice-dot"></div> Prefer not to say</div>
+    </div></div>
+  </div>
+
+  <!-- Step 9: Social media -->
+  <div class="step" id="step-9">
+    <div class="step-header"><p class="step-label">About you</p><h2 class="step-title">What's your social media?</h2></div>
+    <div class="step-body">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">We'll use this to verify your profile. Choose at least one.</p>
+      <div id="socialEntries"></div>
+      <button type="button" onclick="addSocialEntry()" style="background:none;border:1.5px dashed var(--border);border-radius:12px;width:100%;padding:14px;font-size:14px;color:var(--muted);cursor:pointer;margin-top:4px;">+ Add another</button>
+    </div>
+  </div>
+
+  <!-- Step 10: Location -->
+  <div class="step" id="step-10">
+    <div class="step-header"><p class="step-label">Location</p><h2 class="step-title">Where do you live?</h2></div>
+    <div class="step-body"><div class="choices" id="location">
+      <div class="choice" data-value="lower-manhattan" onclick="selectSingle(this)"><div class="choice-dot"></div> Lower Manhattan</div>
+      <div class="choice" data-value="midtown" onclick="selectSingle(this)"><div class="choice-dot"></div> Midtown Manhattan</div>
+      <div class="choice" data-value="upper-manhattan" onclick="selectSingle(this)"><div class="choice-dot"></div> Upper Manhattan</div>
+      <div class="choice" data-value="brooklyn" onclick="selectSingle(this)"><div class="choice-dot"></div> Brooklyn</div>
+      <div class="choice" data-value="queens" onclick="selectSingle(this)"><div class="choice-dot"></div> Queens</div>
+      <div class="choice" data-value="bronx" onclick="selectSingle(this)"><div class="choice-dot"></div> Bronx</div>
+      <div class="choice" data-value="new-jersey" onclick="selectSingle(this)"><div class="choice-dot"></div> New Jersey</div>
+      <div class="choice" data-value="long-island" onclick="selectSingle(this)"><div class="choice-dot"></div> Long Island</div>
+      <div class="choice" data-value="staten-island" onclick="selectSingle(this)"><div class="choice-dot"></div> Staten Island</div>
+      <div class="choice" data-value="not-nyc" onclick="selectSingle(this)"><div class="choice-dot"></div> I don't live near NYC</div>
+    </div></div>
+  </div>
+
+  <!-- Step 11: Manhattan agreement (reworded for Tomorrow) -->
+  <div class="step" id="step-11">
+    <div class="step-header"><p class="step-label">One last thing</p><h2 class="step-title">Your date takes place tomorrow in Manhattan.</h2></div>
+    <div class="step-body">
+      <div class="agree-box">
+        <p class="agree-text">Every Tomorrow date happens at a <strong>carefully chosen bar in Manhattan</strong>, tomorrow evening at <strong>8PM</strong>.<br><br>By continuing, you confirm you're available tomorrow night and willing to travel to Manhattan for your date.</p>
+        <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="toggleAgree(this)">
+          <div id="agreeBox" style="width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;"></div>
+          <span style="font-size:14px;color:var(--white);">Yes, I'm in for tomorrow</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 12: Personal info -->
+  <div class="step" id="step-12">
+    <div class="step-header"><p class="step-label">Almost there</p><h2 class="step-title">Just a few details to confirm your spot.</h2></div>
+    <div class="step-body">
+      <div class="input-row">
+        <span class="input-label">First name</span>
+        <input type="text" id="firstName" placeholder="Your first name" oninput="validateStep(12)" autocomplete="given-name">
+        <span class="field-error" id="firstNameErr"></span>
+      </div>
+      <div class="input-row">
+        <span class="input-label">Phone number</span>
+        <div class="phone-wrap" id="phoneWrap">
+          <select id="countryCode" class="country-select" onchange="validateStep(12)">
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+33">🇫🇷 +33</option>
+            <option value="+49">🇩🇪 +49</option>
+            <option value="+34">🇪🇸 +34</option>
+            <option value="+39">🇮🇹 +39</option>
+            <option value="+31">🇳🇱 +31</option>
+            <option value="+41">🇨🇭 +41</option>
+            <option value="+32">🇧🇪 +32</option>
+            <option value="+1-CA">🇨🇦 +1</option>
+            <option value="+52">🇲🇽 +52</option>
+            <option value="+55">🇧🇷 +55</option>
+            <option value="+61">🇦🇺 +61</option>
+            <option value="+81">🇯🇵 +81</option>
+            <option value="+91">🇮🇳 +91</option>
+            <option value="+971">🇦🇪 +971</option>
+          </select>
+          <input type="tel" id="phoneNumber" placeholder="(555) 000-0000" oninput="formatPhone();validateStep(12)" autocomplete="tel-national">
+        </div>
+        <span class="field-error" id="phoneErr"></span>
+      </div>
+      <div class="input-row">
+        <span class="input-label">Email address</span>
+        <input type="email" id="emailAddress" placeholder="you@example.com" oninput="validateStep(12)" onblur="validateEmailBlur()" autocomplete="email">
+        <span class="field-error" id="emailErr"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error: under 18 -->
+  <div class="step" id="step-error-age">
+    <div class="step-header"><p class="step-label">Sorry</p><h2 class="step-title">You must be 18 or older.</h2></div>
+    <div class="step-body"><p style="color:var(--muted);font-size:16px;line-height:1.6;margin-top:8px;">Tomorrow is only available to adults aged 18 and over. We hope to see you soon.</p></div>
+  </div>
+
+  <!-- Error: implausible age -->
+  <div class="step" id="step-error-implausible">
+    <div class="step-header"><p class="step-label">Hmm</p><h2 class="step-title">That doesn't look right.</h2></div>
+    <div class="step-body"><p id="implausibleMsg" style="color:var(--muted);font-size:16px;line-height:1.6;margin-top:8px;"></p></div>
+  </div>
+
+  <!-- Confirm screen -->
+  <div class="step" id="step-confirm">
+    <div class="step-body" style="padding-bottom:40px;">
+      <div class="confirm-wrap">
+        <div class="confirm-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h2 class="confirm-title">You're in.</h2>
+        <p class="confirm-sub" style="margin-bottom:32px;">Thank you for your application. Our team will review your profile and reach out shortly with next steps.</p>
+        <a href="index.html" style="display:inline-block;padding:14px 32px;background:var(--blue);color:white;border-radius:100px;text-decoration:none;font-size:15px;">Back to home</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<!-- Bottom nav -->
+<div class="btn-wrap" id="btnWrap">
+  <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none;">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="btn-next" id="btnNext" onclick="goNext()">Continue</button>
+</div>
+
+<!-- Ethnicity popup -->
+<div class="popup-overlay" id="ethnicityPopup" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="popup-box">
+    <p class="popup-title">Why do we ask about ethnicity?</p>
+    <p class="popup-body">Your ethnicity helps us understand your background and can inform how we present you to potential matches — respecting your preferences and theirs. This information is never shared publicly and is only used to improve compatibility.</p>
+    <button class="popup-btn" onclick="document.getElementById('ethnicityPopup').classList.remove('open')">Got it</button>
+  </div>
+</div>
+
+<script>
+const TOTAL_STEPS = 12;
+const API_BASE = '/api';
+let currentStep = 1;
+let agreeChecked = false;
+const sessionId = 'tmr_' + Math.random().toString(36).slice(2) + Date.now();
+
+function showStep(s) {
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  const el = typeof s === 'number' ? document.getElementById('step-' + s) : document.getElementById('step-' + s);
+  if (el) el.classList.add('active');
+  const prog = typeof s === 'number' ? (s / TOTAL_STEPS) * 100 : 100;
+  document.getElementById('progressBar').style.width = prog + '%';
+  const isSpecial = typeof s !== 'number' || s > TOTAL_STEPS;
+  document.getElementById('btnBack').style.display = (currentStep > 1 && !isSpecial) ? 'flex' : 'none';
+  document.getElementById('btnNext').style.display = isSpecial ? 'none' : '';
+  document.getElementById('btnWrap').style.display = (s === 'confirm') ? 'none' : 'flex';
+  if (typeof s === 'number') validateStep(s);
+  if (s === 4) updateSlider();
+}
+
+function validateStep(s) {
+  const btn = document.getElementById('btnNext');
+  let ok = true;
+  if (s === 1) {
+    const m = document.getElementById('bMonth').value, d = document.getElementById('bDay').value, y = document.getElementById('bYear').value;
+    ok = m.length === 2 && d.length === 2 && y.length === 4;
+  } else if (s === 2) ok = !!document.querySelector('#gender .choice.selected');
+  else if (s === 3) ok = !!document.querySelector('#meetGender .choice.selected');
+  else if (s === 4) ok = true;
+  else if (s === 5) ok = !!document.querySelector('#education .choice.selected');
+  else if (s === 6) ok = !!document.querySelector('#children .choice.selected');
+  else if (s === 7) ok = !!document.querySelector('#ethnicity .choice.selected');
+  else if (s === 8) ok = !!document.querySelector('#religion .choice.selected');
+  else if (s === 9) {
+    const entries = document.querySelectorAll('#socialEntries .social-entry');
+    ok = entries.length > 0 && document.querySelector('#socialEntries select') && document.querySelector('#socialEntries select').value !== '';
+  }
+  else if (s === 10) ok = !!document.querySelector('#location .choice.selected');
+  else if (s === 11) ok = agreeChecked;
+  else if (s === 12) {
+    const name = document.getElementById('firstName').value.trim();
+    const phone = document.getElementById('phoneNumber').value.trim();
+    const email = document.getElementById('emailAddress').value.trim();
+    ok = name.length > 0 && phone.length >= 7 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+  btn.disabled = !ok;
+}
+
+function selectSingle(el) {
+  el.closest('.choices').querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  validateStep(currentStep);
+  setTimeout(goNext, 300);
+}
+
+function selectMulti(el) {
+  el.classList.toggle('selected');
+  validateStep(currentStep);
+}
+
+function onBdayInput(el, nextId, maxLen) {
+  el.value = el.value.replace(/\D/g,'');
+  if (el.value.length >= maxLen && nextId) document.getElementById(nextId).focus();
+  validateStep(1);
+}
+
+function updateSlider() {
+  const min = parseInt(document.getElementById('minAge').value);
+  const max = parseInt(document.getElementById('maxAge').value);
+  document.getElementById('minVal').textContent = min;
+  document.getElementById('maxVal').textContent = max;
+  const pMin = ((min - 18) / 52) * 100;
+  const pMax = ((max - 18) / 52) * 100;
+  document.getElementById('sliderFill').style.left = pMin + '%';
+  document.getElementById('sliderFill').style.width = (pMax - pMin) + '%';
+}
+document.getElementById('minAge').addEventListener('input', function() {
+  if (parseInt(this.value) > parseInt(document.getElementById('maxAge').value) - 2) this.value = parseInt(document.getElementById('maxAge').value) - 2;
+  updateSlider();
+});
+document.getElementById('maxAge').addEventListener('input', function() {
+  if (parseInt(this.value) < parseInt(document.getElementById('minAge').value) + 2) this.value = parseInt(document.getElementById('minAge').value) + 2;
+  updateSlider();
+});
+
+function toggleAgree(el) {
+  agreeChecked = !agreeChecked;
+  const box = document.getElementById('agreeBox');
+  box.style.background = agreeChecked ? 'var(--blue)' : 'var(--surface)';
+  box.style.borderColor = agreeChecked ? 'var(--blue)' : 'var(--border)';
+  box.innerHTML = agreeChecked ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+  validateStep(11);
+}
+
+let socialCount = 0;
+function addSocialEntry() {
+  const id = ++socialCount;
+  const div = document.createElement('div');
+  div.className = 'social-entry';
+  div.style.cssText = 'display:flex;gap:10px;margin-bottom:12px;align-items:flex-start;';
+  div.innerHTML = `
+    <select style="flex:0 0 130px;margin-bottom:0;" onchange="validateStep(9)">
+      <option value="">Platform</option>
+      <option value="instagram">Instagram</option>
+      <option value="tiktok">TikTok</option>
+      <option value="linkedin">LinkedIn</option>
+      <option value="other">Other</option>
+    </select>
+    <input type="text" placeholder="@handle or URL" style="flex:1;margin-bottom:0;" oninput="validateStep(9)">
+    <button type="button" onclick="this.parentElement.remove();validateStep(9)" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:18px 6px;font-size:18px;line-height:1;">×</button>
+  `;
+  document.getElementById('socialEntries').appendChild(div);
+  validateStep(9);
+}
+
+function formatPhone() {
+  const el = document.getElementById('phoneNumber');
+  let v = el.value.replace(/\D/g,'');
+  if (v.length > 10) v = v.slice(0,10);
+  if (v.length >= 6) v = '(' + v.slice(0,3) + ') ' + v.slice(3,6) + '-' + v.slice(6);
+  else if (v.length >= 3) v = '(' + v.slice(0,3) + ') ' + v.slice(3);
+  el.value = v;
+}
+
+function validateEmailBlur() {
+  const email = document.getElementById('emailAddress').value.trim();
+  const err = document.getElementById('emailErr');
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) err.textContent = 'Please enter a valid email address.';
+  else err.textContent = '';
+}
+
+function getFormData() {
+  const genderEl = document.querySelector('#gender .choice.selected');
+  const meetEls = document.querySelectorAll('#meetGender .choice.selected');
+  const eduEl = document.querySelector('#education .choice.selected');
+  const childEl = document.querySelector('#children .choice.selected');
+  const ethEls = document.querySelectorAll('#ethnicity .choice.selected');
+  const relEls = document.querySelectorAll('#religion .choice.selected');
+  const locEl = document.querySelector('#location .choice.selected');
+  const socials = Array.from(document.querySelectorAll('#socialEntries .social-entry')).map(e => ({
+    platform: e.querySelector('select').value,
+    handle: e.querySelector('input').value.trim()
+  })).filter(s => s.platform && s.handle);
+  return {
+    sessionId,
+    birthdate: `${document.getElementById('bMonth').value}/${document.getElementById('bDay').value}/${document.getElementById('bYear').value}`,
+    gender: genderEl ? genderEl.dataset.value : null,
+    meetGender: Array.from(meetEls).map(e => e.dataset.value).join(','),
+    ageMin: parseInt(document.getElementById('minAge').value),
+    ageMax: parseInt(document.getElementById('maxAge').value),
+    education: eduEl ? eduEl.dataset.value : null,
+    children: childEl ? childEl.dataset.value : null,
+    ethnicity: Array.from(ethEls).map(e => e.dataset.value).join(','),
+    religion: Array.from(relEls).map(e => e.dataset.value).join(','),
+    socialMedia: socials,
+    location: locEl ? locEl.dataset.value : null,
+    firstName: document.getElementById('firstName').value.trim(),
+    phone: document.getElementById('phoneNumber').value.trim(),
+    countryCode: document.getElementById('countryCode').value,
+    email: document.getElementById('emailAddress').value.trim(),
+  };
+}
+
+async function saveProgress(data) {
+  try {
+    await fetch(API_BASE + '/submit-form', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  } catch(e) { console.warn('Save failed:', e); }
+}
+
+async function goNext() {
+  if (currentStep === 1) {
+    const m = parseInt(document.getElementById('bMonth').value);
+    const d = parseInt(document.getElementById('bDay').value);
+    const y = parseInt(document.getElementById('bYear').value);
+    const age = Math.floor((new Date() - new Date(y, m-1, d)) / (365.25*24*60*60*1000));
+    if (age < 18) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-error-age').classList.add('active');
+      document.getElementById('btnWrap').style.display = 'flex';
+      document.getElementById('btnNext').style.display = 'none';
+      document.getElementById('btnBack').style.display = 'flex';
+      return;
+    }
+    if (age >= 130) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('implausibleMsg').textContent = `You said you were ${age} years old.`;
+      document.getElementById('step-error-implausible').classList.add('active');
+      document.getElementById('btnWrap').style.display = 'flex';
+      document.getElementById('btnNext').style.display = 'none';
+      document.getElementById('btnBack').style.display = 'flex';
+      return;
+    }
+  }
+  if (currentStep < TOTAL_STEPS) {
+    saveProgress({ ...getFormData(), lastStep: currentStep });
+    currentStep++;
+    showStep(currentStep);
+  } else {
+    // Final step — save and show confirm
+    await saveProgress({ ...getFormData(), lastStep: TOTAL_STEPS, paymentStatus: 'applied' });
+    showStep('confirm');
+  }
+}
+
+function goBack() {
+  document.getElementById('btnNext').style.display = '';
+  if (currentStep > 1) { currentStep--; showStep(currentStep); }
+}
+
+// Init social entry
+addSocialEntry();
+showStep(1);
+updateSlider();
+</script>
+</body>
+</html>
