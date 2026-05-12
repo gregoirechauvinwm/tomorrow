@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
   try {
     const { email, name } = req.body || {};
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 1999, // $19.99
+      amount: 2000, // $20
       currency: 'usd',
       receipt_email: email || undefined,
       metadata: { name: name || '' },

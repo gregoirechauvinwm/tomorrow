@@ -306,7 +306,7 @@ fbq('init','2214881865523888');fbq('track','PageView');
           <div style="padding-bottom:32px;padding-top:6px;">
             <span style="display:inline-block;background:var(--blue);color:white;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:10px;">Now</span>
             <div style="font-size:16px;font-weight:500;color:var(--white);margin-bottom:6px;">Prepay for your first date</div>
-            <p style="font-size:14px;color:var(--muted);line-height:1.6;">Secure tomorrow's date by paying your $19.99 date token. If we can't match you in time or the date gets canceled, you get a full cash refund.</p>
+            <p style="font-size:14px;color:var(--muted);line-height:1.6;">Secure tomorrow's date by paying your $20 date token. If we can't match you in time or the date gets canceled, you get a full cash refund.</p>
           </div>
         </div>
 
@@ -404,7 +404,7 @@ fbq('init','2214881865523888');fbq('track','PageView');
       <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:20px 24px;margin-bottom:16px;">
         <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">What you're paying for</p>
         <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:16px;">
-          <span style="font-family:var(--serif);font-size:36px;font-weight:400;color:var(--white);">$19.99</span>
+          <span style="font-family:var(--serif);font-size:36px;font-weight:400;color:var(--white);">$20</span>
           <span style="font-size:14px;color:var(--muted);">one date token</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;">
@@ -430,7 +430,7 @@ fbq('init','2214881865523888');fbq('track','PageView');
         <div id="cardFieldsWrap">
           <div id="payment-element" style="margin-bottom:20px;"></div>
           <div id="paymentError" style="color:#f87171;font-size:14px;margin-bottom:12px;display:none;"></div>
-          <button id="submitPaymentBtn" class="btn-stripe" onclick="submitPayment()">Pay $19.99 &amp; book my date</button>
+          <button id="submitPaymentBtn" class="btn-stripe" onclick="submitPayment()">Pay $20 &amp; book my date</button>
         </div>
       </div>
 
@@ -747,7 +747,7 @@ async function initPaymentElement() {
       }
       const payEl = stripeElements.create('payment', { layout: 'tabs' });
       payEl.mount('#payment-element');
-      payEl.on('ready', () => { btn.disabled = false; btn.textContent = 'Pay $19.99 & book my date'; });
+      payEl.on('ready', () => { btn.disabled = false; btn.textContent = 'Pay $20 & book my date'; });
     });
     expressEl.on('confirm', async () => {
       const { error } = await stripeInstance.confirmPayment({ elements: stripeElements, confirmParams: { return_url: window.location.origin + '/form.html?success=1' } });
@@ -758,7 +758,7 @@ async function initPaymentElement() {
     document.getElementById('paymentError').textContent = err.message;
     document.getElementById('paymentError').style.display = 'block';
     document.getElementById('cardFieldsWrap').style.display = 'block';
-    btn.textContent = 'Pay $19.99 & book my date'; btn.disabled = false;
+    btn.textContent = 'Pay $20 & book my date'; btn.disabled = false;
   }
 }
 
@@ -781,10 +781,10 @@ async function submitPayment() {
   });
   if (error) {
     errDiv.textContent = error.message; errDiv.style.display = 'block';
-    btn.disabled = false; btn.textContent = 'Pay $19.99 & book my date';
+    btn.disabled = false; btn.textContent = 'Pay $20 & book my date';
   } else if (paymentIntent && paymentIntent.status === 'succeeded') {
     await saveProgress({ ...getFormData(), paymentIntentId: paymentIntent.id, paymentStatus: 'succeeded', lastStep: 13 });
-    if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: 19.99, currency: 'USD' });
+    if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: 20, currency: 'USD' });
     if (typeof fbq !== 'undefined') fbq('track', 'CompleteRegistration');
     showStep('confirm');
   }
@@ -797,7 +797,7 @@ async function submitPayment() {
   const status = params.get('redirect_status');
   if (pi && status === 'succeeded') {
     saveProgress({ paymentIntentId: pi, paymentStatus: 'succeeded', lastStep: 13 });
-    if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: 19.99, currency: 'USD' });
+    if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: 20, currency: 'USD' });
     showStep('confirm');
   }
 })();
