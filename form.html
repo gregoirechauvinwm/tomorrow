@@ -130,7 +130,10 @@ fbq('init','2214881865523888');fbq('track','PageView');
   .confirm-title { font-family: var(--serif); font-size: 30px; font-weight: 400; margin-bottom: 12px; color: var(--white); }
   .confirm-sub { font-size: 16px; color: var(--muted); line-height: 1.6; }
 
-  /* Checkout */
+  /* Single-select: no radio dot, full-width tap target */
+  .choices.single .choice-dot { display: none; }
+  .choices.single .choice { justify-content: flex-start; }
+
   .checkout-terms { display:flex; align-items:flex-start; gap:12px; padding:16px; border:1.5px solid var(--border); border-radius:12px; cursor:pointer; margin-bottom:16px; background:var(--surface); transition:border-color 0.2s; }
   .checkout-terms.checked { border-color:var(--blue); }
   .checkout-terms-box { width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s; }
@@ -169,7 +172,7 @@ fbq('init','2214881865523888');fbq('track','PageView');
   <!-- Step 2: Gender -->
   <div class="step" id="step-2">
     <div class="step-header"><p class="step-label">About you</p><h2 class="step-title">How do you identify?</h2></div>
-    <div class="step-body"><div class="choices" id="gender">
+    <div class="step-body"><div class="choices single" id="gender">
       <div class="choice" data-value="man" onclick="selectSingle(this)"><div class="choice-dot"></div> I am a man</div>
       <div class="choice" data-value="woman" onclick="selectSingle(this)"><div class="choice-dot"></div> I am a woman</div>
       <div class="choice" data-value="nonbinary" onclick="selectSingle(this)"><div class="choice-dot"></div> I am non-binary</div>
@@ -207,7 +210,7 @@ fbq('init','2214881865523888');fbq('track','PageView');
   <!-- Step 5: Education -->
   <div class="step" id="step-5">
     <div class="step-header"><p class="step-label">About you</p><h2 class="step-title">What's your education level?</h2></div>
-    <div class="step-body"><div class="choices" id="education">
+    <div class="step-body"><div class="choices single" id="education">
       <div class="choice" data-value="highschool" onclick="selectSingle(this)"><div class="choice-dot"></div> High school / Secondary school</div>
       <div class="choice" data-value="undergrad" onclick="selectSingle(this)"><div class="choice-dot"></div> Undergrad</div>
       <div class="choice" data-value="postgrad" onclick="selectSingle(this)"><div class="choice-dot"></div> Postgrad</div>
@@ -218,7 +221,7 @@ fbq('init','2214881865523888');fbq('track','PageView');
   <!-- Step 6: Children -->
   <div class="step" id="step-6">
     <div class="step-header"><p class="step-label">About you</p><h2 class="step-title">Do you have children?</h2></div>
-    <div class="step-body"><div class="choices" id="children">
+    <div class="step-body"><div class="choices single" id="children">
       <div class="choice" data-value="no" onclick="selectSingle(this)"><div class="choice-dot"></div> I don't have children</div>
       <div class="choice" data-value="yes" onclick="selectSingle(this)"><div class="choice-dot"></div> I have children</div>
     </div></div>
@@ -277,7 +280,7 @@ fbq('init','2214881865523888');fbq('track','PageView');
   <!-- Step 10: Location -->
   <div class="step" id="step-10">
     <div class="step-header"><p class="step-label">Location</p><h2 class="step-title">Where do you live?</h2></div>
-    <div class="step-body"><div class="choices" id="location">
+    <div class="step-body"><div class="choices single" id="location">
       <div class="choice" data-value="lower-manhattan" onclick="selectSingle(this)"><div class="choice-dot"></div> Lower Manhattan</div>
       <div class="choice" data-value="midtown" onclick="selectSingle(this)"><div class="choice-dot"></div> Midtown Manhattan</div>
       <div class="choice" data-value="upper-manhattan" onclick="selectSingle(this)"><div class="choice-dot"></div> Upper Manhattan</div>
@@ -306,7 +309,7 @@ fbq('init','2214881865523888');fbq('track','PageView');
           <div style="padding-bottom:32px;padding-top:6px;">
             <span style="display:inline-block;background:var(--blue);color:white;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:10px;">Now</span>
             <div style="font-size:16px;font-weight:500;color:var(--white);margin-bottom:6px;">Prepay for your first date</div>
-            <p style="font-size:14px;color:var(--muted);line-height:1.6;">Secure tomorrow's date by paying your $20 date token. If we can't match you in time or the date gets canceled, you get a full cash refund.</p>
+            <p style="font-size:14px;color:var(--muted);line-height:1.6;">Secure tomorrow's date by purchasing your $20 date token. If we can't match you in time or the date gets canceled, you'll receive a full cash refund.</p>
           </div>
         </div>
 
@@ -319,7 +322,7 @@ fbq('init','2214881865523888');fbq('track','PageView');
           <div style="padding-bottom:32px;padding-top:6px;opacity:0.6;">
             <span style="display:inline-block;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:10px;">Today</span>
             <div style="font-size:16px;font-weight:500;color:var(--white);margin-bottom:6px;">Onboarding with your AI</div>
-            <p style="font-size:14px;color:var(--muted);line-height:1.6;">Your AI matchmaker gets to know you deeply — your personality, your history, your preferences, and what you're really looking for. It will also show you photos of other members to understand your physical preferences.</p>
+            <p style="font-size:14px;color:var(--muted);line-height:1.6;">Your AI matchmaker gets to know you deeply and what you're truly looking for. It will also show you photos of other members to better understand your physical preferences.</p>
           </div>
         </div>
 
@@ -329,9 +332,9 @@ fbq('init','2214881865523888');fbq('track','PageView');
             <div style="width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--muted);flex-shrink:0;">3</div>
           </div>
           <div style="padding-bottom:16px;padding-top:6px;opacity:0.6;">
-            <span style="display:inline-block;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:10px;">Tomorrow 8PM</span>
+            <span style="display:inline-block;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:10px;">Tomorrow at 8 PM</span>
             <div style="font-size:16px;font-weight:500;color:var(--white);margin-bottom:6px;">Your blind date in Manhattan</div>
-            <p style="font-size:14px;color:var(--muted);line-height:1.6;">You will know their name and compatibility score. We'll make the booking at a partner venue in Manhattan. You just have to show up.</p>
+            <p style="font-size:14px;color:var(--muted);line-height:1.6;">You'll know their name and compatibility score. We'll book a table at one of our partner venues in Manhattan. You just have to show up.</p>
           </div>
         </div>
 
@@ -511,10 +514,12 @@ function showStep(s) {
   if (el) el.classList.add('active');
   const prog = typeof s === 'number' ? (s / TOTAL_STEPS) * 100 : 100;
   document.getElementById('progressBar').style.width = prog + '%';
+  const SINGLE_SELECT_STEPS = new Set([2, 5, 6, 10]);
   const isPayment = s === 13;
   const isSpecial = typeof s !== 'number' || s > TOTAL_STEPS;
+  const isSingle = typeof s === 'number' && SINGLE_SELECT_STEPS.has(s);
   document.getElementById('btnBack').style.display = (currentStep > 1 && !isSpecial && !isPayment) ? 'flex' : 'none';
-  document.getElementById('btnNext').style.display = (isSpecial || isPayment) ? 'none' : '';
+  document.getElementById('btnNext').style.display = (isSpecial || isPayment || isSingle) ? 'none' : '';
   document.getElementById('btnWrap').style.display = (s === 'confirm' || isPayment) ? 'none' : 'flex';
   if (isPayment) { initPaymentElement(); if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout'); }
   if (typeof s === 'number' && !isPayment) validateStep(s);
@@ -591,19 +596,31 @@ function addSocialEntry() {
   const id = ++socialCount;
   const div = document.createElement('div');
   div.className = 'social-entry';
-  div.style.cssText = 'display:flex;gap:10px;margin-bottom:12px;align-items:flex-start;';
+  div.style.cssText = 'display:flex;gap:10px;margin-bottom:12px;align-items:center;';
   div.innerHTML = `
-    <select style="flex:0 0 130px;margin-bottom:0;" onchange="validateStep(9)">
+    <select style="flex:0 0 130px;margin-bottom:0;" onchange="onSocialPlatformChange(this)">
       <option value="">Platform</option>
       <option value="instagram">Instagram</option>
       <option value="tiktok">TikTok</option>
       <option value="linkedin">LinkedIn</option>
       <option value="other">Other</option>
     </select>
-    <input type="text" placeholder="@handle or URL" style="flex:1;margin-bottom:0;" oninput="validateStep(9)">
-    <button type="button" onclick="this.parentElement.remove();validateStep(9)" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:18px 6px;font-size:18px;line-height:1;">×</button>
+    <div style="flex:1;display:flex;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;padding:0 14px;transition:border-color 0.2s;" onfocusin="this.style.borderColor='var(--blue)'" onfocusout="this.style.borderColor='var(--border)'">
+      <span class="social-at-prefix" style="color:var(--muted);font-size:15px;display:none;margin-right:2px;">@</span>
+      <input type="text" placeholder="handle or URL" style="flex:1;background:transparent;border:none;outline:none;padding:14px 0;font-size:15px;color:var(--white);font-family:var(--sans);" oninput="validateStep(9)">
+    </div>
+    <button type="button" onclick="this.parentElement.remove();validateStep(9)" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:6px;font-size:20px;line-height:1;flex-shrink:0;">×</button>
   `;
   document.getElementById('socialEntries').appendChild(div);
+  validateStep(9);
+}
+
+function onSocialPlatformChange(sel) {
+  const prefix = sel.parentElement.querySelector('.social-at-prefix');
+  const input = sel.parentElement.querySelector('input');
+  const showAt = ['instagram', 'tiktok'].includes(sel.value);
+  prefix.style.display = showAt ? 'inline' : 'none';
+  input.placeholder = sel.value === 'linkedin' ? 'linkedin.com/in/yourname' : sel.value === 'other' ? 'URL or handle' : 'handle';
   validateStep(9);
 }
 
