@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Apply — Tomorrow by Amata</title>
+<script src="https://js.stripe.com/v3/"></script>
 <!-- Meta Pixel -->
 <script>
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
@@ -128,6 +129,17 @@ fbq('init','2214881865523888');fbq('track','PageView');
   .confirm-icon svg { stroke: var(--blue); fill: none; stroke-width: 1.5; width: 28px; height: 28px; }
   .confirm-title { font-family: var(--serif); font-size: 30px; font-weight: 400; margin-bottom: 12px; color: var(--white); }
   .confirm-sub { font-size: 16px; color: var(--muted); line-height: 1.6; }
+
+  /* Checkout */
+  .checkout-terms { display:flex; align-items:flex-start; gap:12px; padding:16px; border:1.5px solid var(--border); border-radius:12px; cursor:pointer; margin-bottom:16px; background:var(--surface); transition:border-color 0.2s; }
+  .checkout-terms.checked { border-color:var(--blue); }
+  .checkout-terms-box { width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s; }
+  .checkout-terms.checked .checkout-terms-box { background:var(--blue);border-color:var(--blue); }
+  .checkout-terms-text { font-size:13px;color:var(--muted);line-height:1.6; }
+  .checkout-terms-text a { color:var(--blue); }
+  .btn-stripe { width:100%;padding:16px;background:var(--blue);color:white;border:none;border-radius:100px;font-size:15px;font-family:var(--sans);cursor:pointer;transition:background 0.2s; }
+  .btn-stripe:hover { background:var(--blue-dark); }
+  .btn-stripe:disabled { background:rgba(255,255,255,0.1);color:var(--muted);cursor:not-allowed; }
 </style>
 </head>
 <body>
@@ -347,6 +359,80 @@ fbq('init','2214881865523888');fbq('track','PageView');
     <div class="step-body"><p id="implausibleMsg" style="color:var(--muted);font-size:16px;line-height:1.6;margin-top:8px;"></p></div>
   </div>
 
+  <!-- Step 13: Payment -->
+  <div class="step" id="step-13">
+    <div class="step-header" style="padding:16px 0 12px;">
+      <p class="step-label">Last step</p>
+      <h2 class="step-title">Your date token</h2>
+    </div>
+    <div class="step-body">
+      <!-- Price display -->
+      <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:20px 24px;margin-bottom:16px;">
+        <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">What you're paying for</p>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:16px;">
+          <span style="font-family:var(--serif);font-size:36px;font-weight:400;color:var(--white);">$19.99</span>
+          <span style="font-size:14px;color:var(--muted);">one date token</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;"></div>One curated blind date tomorrow at 8PM</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;"></div>AI matchmaker tailored to you</div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;"></div>Post-date debrief that improves every next match</div>
+        </div>
+      </div>
+
+      <!-- Terms checkbox -->
+      <div class="checkout-terms" id="termsWrap" onclick="toggleTerms()">
+        <div id="termsBox" class="checkout-terms-box"></div>
+        <p class="checkout-terms-text">I confirm I'll show up tomorrow night in Manhattan. I accept the <a href="terms.html" target="_blank" onclick="event.stopPropagation()">terms and conditions</a>.</p>
+      </div>
+
+      <!-- Payment element -->
+      <div id="paymentElementWrap" style="opacity:0.3;pointer-events:none;transition:opacity 0.3s;">
+        <div id="expressCheckoutWrap" style="display:none;margin-bottom:16px;">
+          <div id="express-checkout-element"></div>
+          <div style="display:flex;align-items:center;gap:12px;margin:16px 0;"><div style="flex:1;height:1px;background:var(--border);"></div><span style="font-size:13px;color:var(--muted);">or</span><div style="flex:1;height:1px;background:var(--border);"></div></div>
+          <button id="showCardBtn" onclick="toggleCardFields()" style="width:100%;padding:14px;background:var(--surface);border:1.5px solid var(--border);border-radius:100px;font-size:14px;color:var(--white);cursor:pointer;font-family:var(--sans);">Pay by credit / debit card</button>
+        </div>
+        <div id="cardFieldsWrap">
+          <div id="payment-element" style="margin-bottom:20px;"></div>
+          <div id="paymentError" style="color:#f87171;font-size:14px;margin-bottom:12px;display:none;"></div>
+          <button id="submitPaymentBtn" class="btn-stripe" onclick="submitPayment()">Pay $19.99 &amp; book my date</button>
+        </div>
+      </div>
+
+      <button onclick="goBack()" style="background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px;margin-top:16px;padding:0;font-family:var(--sans);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>Go back
+      </button>
+
+      <!-- Press quotes -->
+      <div style="margin-top:36px;border-top:1px solid var(--border);padding-top:28px;padding-bottom:40px;">
+        <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;">They talk about us</p>
+        <div style="display:flex;flex-direction:column;gap:28px;">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <img src="images/pr-checkout-1.png" alt="Press" style="width:64px;height:auto;border-radius:8px;flex-shrink:0;">
+            <p style="font-family:var(--serif);font-size:15px;color:var(--white);line-height:1.5;font-style:italic;">"It's about intentionality."</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <img src="images/pr-checkout-2.png" alt="Press" style="width:64px;height:auto;border-radius:8px;flex-shrink:0;">
+            <p style="font-family:var(--serif);font-size:15px;color:var(--white);line-height:1.5;font-style:italic;">"The best 'feature' is less time online and more time in the real world."</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <img src="images/pr-checkout-3.png" alt="Press" style="width:64px;height:auto;border-radius:8px;flex-shrink:0;">
+            <p style="font-family:var(--serif);font-size:15px;color:var(--white);line-height:1.5;font-style:italic;">"The new AI matchmaker to reduce burnout."</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <img src="images/pr-checkout-4.png" alt="Press" style="width:64px;height:auto;border-radius:8px;flex-shrink:0;">
+            <p style="font-family:var(--serif);font-size:15px;color:var(--white);line-height:1.5;font-style:italic;">"Say goodbye to endless swiping and pointless small talk."</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <img src="images/pr-checkout-5.png" alt="Press" style="width:64px;height:auto;border-radius:8px;flex-shrink:0;">
+            <p style="font-family:var(--serif);font-size:15px;color:var(--white);line-height:1.5;font-style:italic;">"There's no swiping, no inbox full of messages."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Confirm screen -->
   <div class="step" id="step-confirm">
     <div class="step-body" style="padding-bottom:40px;">
@@ -380,7 +466,7 @@ fbq('init','2214881865523888');fbq('track','PageView');
 </div>
 
 <script>
-const TOTAL_STEPS = 12;
+const TOTAL_STEPS = 13;
 const API_BASE = '/api';
 let currentStep = 1;
 let agreeChecked = false;
@@ -392,11 +478,13 @@ function showStep(s) {
   if (el) el.classList.add('active');
   const prog = typeof s === 'number' ? (s / TOTAL_STEPS) * 100 : 100;
   document.getElementById('progressBar').style.width = prog + '%';
+  const isPayment = s === 13;
   const isSpecial = typeof s !== 'number' || s > TOTAL_STEPS;
-  document.getElementById('btnBack').style.display = (currentStep > 1 && !isSpecial) ? 'flex' : 'none';
-  document.getElementById('btnNext').style.display = isSpecial ? 'none' : '';
-  document.getElementById('btnWrap').style.display = (s === 'confirm') ? 'none' : 'flex';
-  if (typeof s === 'number') validateStep(s);
+  document.getElementById('btnBack').style.display = (currentStep > 1 && !isSpecial && !isPayment) ? 'flex' : 'none';
+  document.getElementById('btnNext').style.display = (isSpecial || isPayment) ? 'none' : '';
+  document.getElementById('btnWrap').style.display = (s === 'confirm' || isPayment) ? 'none' : 'flex';
+  if (isPayment) { initPaymentElement(); if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout'); }
+  if (typeof s === 'number' && !isPayment) validateStep(s);
   if (s === 4) updateSlider();
 }
 
@@ -580,10 +668,11 @@ async function goNext() {
     saveProgress({ ...getFormData(), lastStep: currentStep });
     currentStep++;
     showStep(currentStep);
+  } else if (currentStep === TOTAL_STEPS) {
+    // Go to payment
+    saveProgress({ ...getFormData(), lastStep: currentStep });
+    showStep(13);
   } else {
-    // Final step — save and show confirm
-    await saveProgress({ ...getFormData(), lastStep: TOTAL_STEPS, paymentStatus: 'applied' });
-    if (typeof fbq !== 'undefined') fbq('track', 'CompleteRegistration');
     showStep('confirm');
   }
 }
@@ -597,6 +686,98 @@ function goBack() {
 addSocialEntry();
 showStep(1);
 updateSlider();
+const STRIPE_PK = 'pk_live_51QoiEaP3sDTUdnpTIaWcQDK72P6m50hUiOKjR0BFWKFGezOjGvQX3cGcbbjvglbAOYNLBWvnbUTow2CVsO5XjVg800rrLhG9N8';
+let termsAccepted = false, stripeElements = null, stripeInstance = null;
+
+function toggleTerms() {
+  termsAccepted = !termsAccepted;
+  const wrap = document.getElementById('termsWrap');
+  const box = document.getElementById('termsBox');
+  const pay = document.getElementById('paymentElementWrap');
+  wrap.classList.toggle('checked', termsAccepted);
+  box.innerHTML = termsAccepted ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+  pay.style.opacity = termsAccepted ? '1' : '0.3';
+  pay.style.pointerEvents = termsAccepted ? 'auto' : 'none';
+}
+
+async function initPaymentElement() {
+  if (stripeElements) return;
+  const btn = document.getElementById('submitPaymentBtn');
+  btn.textContent = 'Loading payment…'; btn.disabled = true;
+  try {
+    const res = await fetch('/api/create-payment-intent', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: document.getElementById('emailAddress').value.trim(), name: document.getElementById('firstName').value.trim() })
+    });
+    const { clientSecret, error } = await res.json();
+    if (error) throw new Error(error);
+    stripeInstance = Stripe(STRIPE_PK);
+    const appearance = { theme: 'night', variables: { colorPrimary: '#6475ff', colorBackground: '#141414', colorText: '#ffffff', colorDanger: '#f87171', fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif', borderRadius: '12px' } };
+    stripeElements = stripeInstance.elements({ appearance, clientSecret });
+    const expressEl = stripeElements.create('expressCheckout', { buttonHeight: 52, paymentMethods: { applePay: 'auto', googlePay: 'auto' } });
+    expressEl.on('ready', ({ availablePaymentMethods }) => {
+      if (availablePaymentMethods && Object.values(availablePaymentMethods).some(Boolean)) {
+        document.getElementById('expressCheckoutWrap').style.display = 'block';
+        document.getElementById('cardFieldsWrap').style.display = 'none';
+        expressEl.mount('#express-checkout-element');
+      }
+      const payEl = stripeElements.create('payment', { layout: 'tabs' });
+      payEl.mount('#payment-element');
+      payEl.on('ready', () => { btn.disabled = false; btn.textContent = 'Pay $19.99 & book my date'; });
+    });
+    expressEl.on('confirm', async () => {
+      const { error } = await stripeInstance.confirmPayment({ elements: stripeElements, confirmParams: { return_url: window.location.origin + '/form.html?success=1' } });
+      if (error) { document.getElementById('paymentError').textContent = error.message; document.getElementById('paymentError').style.display = 'block'; }
+    });
+    expressEl.mount('#express-checkout-element');
+  } catch (err) {
+    document.getElementById('paymentError').textContent = err.message;
+    document.getElementById('paymentError').style.display = 'block';
+    document.getElementById('cardFieldsWrap').style.display = 'block';
+    btn.textContent = 'Pay $19.99 & book my date'; btn.disabled = false;
+  }
+}
+
+let cardFieldsVisible = false;
+function toggleCardFields() {
+  cardFieldsVisible = !cardFieldsVisible;
+  document.getElementById('cardFieldsWrap').style.display = cardFieldsVisible ? 'block' : 'none';
+  document.getElementById('showCardBtn').textContent = cardFieldsVisible ? 'Hide card fields' : 'Pay by credit / debit card';
+}
+
+async function submitPayment() {
+  if (!stripeElements || !stripeInstance) return;
+  const btn = document.getElementById('submitPaymentBtn');
+  const errDiv = document.getElementById('paymentError');
+  btn.disabled = true; btn.textContent = 'Processing…'; errDiv.style.display = 'none';
+  const { error, paymentIntent } = await stripeInstance.confirmPayment({
+    elements: stripeElements,
+    confirmParams: { return_url: window.location.origin + '/form.html?success=1' },
+    redirect: 'if_required'
+  });
+  if (error) {
+    errDiv.textContent = error.message; errDiv.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Pay $19.99 & book my date';
+  } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+    await saveProgress({ ...getFormData(), paymentIntentId: paymentIntent.id, paymentStatus: 'succeeded', lastStep: 13 });
+    if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: 19.99, currency: 'USD' });
+    if (typeof fbq !== 'undefined') fbq('track', 'CompleteRegistration');
+    showStep('confirm');
+  }
+}
+
+// Handle redirect-back from 3DS
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const pi = params.get('payment_intent');
+  const status = params.get('redirect_status');
+  if (pi && status === 'succeeded') {
+    saveProgress({ paymentIntentId: pi, paymentStatus: 'succeeded', lastStep: 13 });
+    if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: 19.99, currency: 'USD' });
+    showStep('confirm');
+  }
+})();
+
 </script>
 </body>
 </html>
