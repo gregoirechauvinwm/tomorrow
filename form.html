@@ -291,33 +291,67 @@ fbq('init','2214881865523888');fbq('track','PageView');
     </div></div>
   </div>
 
-  <!-- Step 11: Manhattan agreement (reworded for Tomorrow) -->
-  <div class="step" id="step-11">
-    <div class="step-header"><p class="step-label">One last thing</p><h2 class="step-title">Your date takes place tomorrow in Manhattan.</h2></div>
+  <!-- Step 11: How it works -->
+  <div class="step" id="step-12">
+    <div class="step-header"><p class="step-label">Here's what happens</p><h2 class="step-title">Your next 24 hours.</h2></div>
     <div class="step-body">
-      <div class="agree-box">
-        <p class="agree-text">Every Tomorrow date happens at a <strong>carefully chosen bar in Manhattan</strong>, at <strong>8PM</strong>.<br><br>By continuing, you confirm that you are willing to travel to Manhattan for your date.</p>
-        <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="toggleAgree(this)">
-          <div id="agreeBox" style="width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;"></div>
-          <span style="font-size:14px;color:var(--white);">Yes, I'm in for tomorrow</span>
+      <div style="display:flex;flex-direction:column;gap:0;padding-top:8px;">
+
+        <!-- Mini step 1 -->
+        <div style="display:flex;gap:16px;">
+          <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;color:white;flex-shrink:0;">1</div>
+            <div style="width:1.5px;flex:1;background:rgba(255,255,255,0.1);margin:6px 0;min-height:40px;"></div>
+          </div>
+          <div style="padding-bottom:32px;padding-top:6px;">
+            <span style="display:inline-block;background:var(--blue);color:white;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:10px;">Now</span>
+            <div style="font-size:16px;font-weight:500;color:var(--white);margin-bottom:6px;">Prepay for your first date</div>
+            <p style="font-size:14px;color:var(--muted);line-height:1.6;">Secure tomorrow's date by paying your $19.99 date token. If we can't match you in time or the date gets canceled, you get a full cash refund.</p>
+          </div>
         </div>
+
+        <!-- Mini step 2 -->
+        <div style="display:flex;gap:16px;">
+          <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+            <div style="width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--muted);flex-shrink:0;">2</div>
+            <div style="width:1.5px;flex:1;background:rgba(255,255,255,0.1);margin:6px 0;min-height:40px;"></div>
+          </div>
+          <div style="padding-bottom:32px;padding-top:6px;opacity:0.6;">
+            <span style="display:inline-block;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:10px;">Today</span>
+            <div style="font-size:16px;font-weight:500;color:var(--white);margin-bottom:6px;">Onboarding with your AI</div>
+            <p style="font-size:14px;color:var(--muted);line-height:1.6;">Your AI matchmaker gets to know you deeply — your personality, your history, your preferences, and what you're really looking for. It will also show you photos of other members to understand your physical preferences.</p>
+          </div>
+        </div>
+
+        <!-- Mini step 3 -->
+        <div style="display:flex;gap:16px;">
+          <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+            <div style="width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--muted);flex-shrink:0;">3</div>
+          </div>
+          <div style="padding-bottom:16px;padding-top:6px;opacity:0.6;">
+            <span style="display:inline-block;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:10px;">Tomorrow 8PM</span>
+            <div style="font-size:16px;font-weight:500;color:var(--white);margin-bottom:6px;">Your blind date in Manhattan</div>
+            <p style="font-size:14px;color:var(--muted);line-height:1.6;">You will know their name and compatibility score. We'll make the booking at a partner venue in Manhattan. You just have to show up.</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
   <!-- Step 12: Personal info -->
-  <div class="step" id="step-12">
+  <div class="step" id="step-11">
     <div class="step-header"><p class="step-label">Almost there</p><h2 class="step-title">Just a few details to confirm your spot.</h2></div>
     <div class="step-body">
       <div class="input-row">
         <span class="input-label">First name</span>
-        <input type="text" id="firstName" placeholder="Your first name" oninput="validateStep(12)" autocomplete="given-name">
+        <input type="text" id="firstName" placeholder="Your first name" oninput="validateStep(11)" autocomplete="given-name">
         <span class="field-error" id="firstNameErr"></span>
       </div>
       <div class="input-row">
         <span class="input-label">Phone number</span>
         <div class="phone-wrap" id="phoneWrap">
-          <select id="countryCode" class="country-select" onchange="validateStep(12)">
+          <select id="countryCode" class="country-select" onchange="validateStep(11)">
             <option value="+1">🇺🇸 +1</option>
             <option value="+44">🇬🇧 +44</option>
             <option value="+33">🇫🇷 +33</option>
@@ -335,13 +369,13 @@ fbq('init','2214881865523888');fbq('track','PageView');
             <option value="+91">🇮🇳 +91</option>
             <option value="+971">🇦🇪 +971</option>
           </select>
-          <input type="tel" id="phoneNumber" placeholder="(555) 000-0000" oninput="formatPhone();validateStep(12)" autocomplete="tel-national">
+          <input type="tel" id="phoneNumber" placeholder="(555) 000-0000" oninput="formatPhone();validateStep(11)" autocomplete="tel-national">
         </div>
         <span class="field-error" id="phoneErr"></span>
       </div>
       <div class="input-row">
         <span class="input-label">Email address</span>
-        <input type="email" id="emailAddress" placeholder="you@example.com" oninput="validateStep(12)" onblur="validateEmailBlur()" autocomplete="email">
+        <input type="email" id="emailAddress" placeholder="you@example.com" oninput="validateStep(11)" onblur="validateEmailBlur()" autocomplete="email">
         <span class="field-error" id="emailErr"></span>
       </div>
     </div>
@@ -469,7 +503,6 @@ fbq('init','2214881865523888');fbq('track','PageView');
 const TOTAL_STEPS = 13;
 const API_BASE = '/api';
 let currentStep = 1;
-let agreeChecked = false;
 const sessionId = 'tmr_' + Math.random().toString(36).slice(2) + Date.now();
 
 function showStep(s) {
@@ -506,13 +539,13 @@ function validateStep(s) {
     ok = entries.length > 0 && document.querySelector('#socialEntries select') && document.querySelector('#socialEntries select').value !== '';
   }
   else if (s === 10) ok = !!document.querySelector('#location .choice.selected');
-  else if (s === 11) ok = agreeChecked;
-  else if (s === 12) {
+  else if (s === 11) {
     const name = document.getElementById('firstName').value.trim();
     const phone = document.getElementById('phoneNumber').value.trim();
     const email = document.getElementById('emailAddress').value.trim();
     ok = name.length > 0 && phone.length >= 7 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
+  else if (s === 12) ok = true;
   btn.disabled = !ok;
 }
 
@@ -552,15 +585,6 @@ document.getElementById('maxAge').addEventListener('input', function() {
   if (parseInt(this.value) < parseInt(document.getElementById('minAge').value) + 2) this.value = parseInt(document.getElementById('minAge').value) + 2;
   updateSlider();
 });
-
-function toggleAgree(el) {
-  agreeChecked = !agreeChecked;
-  const box = document.getElementById('agreeBox');
-  box.style.background = agreeChecked ? 'var(--blue)' : 'var(--surface)';
-  box.style.borderColor = agreeChecked ? 'var(--blue)' : 'var(--border)';
-  box.innerHTML = agreeChecked ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
-  validateStep(11);
-}
 
 let socialCount = 0;
 function addSocialEntry() {
