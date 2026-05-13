@@ -760,7 +760,6 @@ async function initPaymentElement() {
       if (availablePaymentMethods && Object.values(availablePaymentMethods).some(Boolean)) {
         document.getElementById('expressCheckoutWrap').style.display = 'block';
         document.getElementById('cardFieldsWrap').style.display = 'none';
-        expressEl.mount('#express-checkout-element');
       }
       const payEl = stripeElements.create('payment', { layout: 'tabs' });
       payEl.mount('#payment-element');
