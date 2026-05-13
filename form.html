@@ -753,7 +753,7 @@ async function initPaymentElement() {
     const { clientSecret, error } = await res.json();
     if (error) throw new Error(error);
     stripeInstance = Stripe(STRIPE_PK);
-    const appearance = { theme: 'night', variables: { colorPrimary: '#6475ff', colorBackground: '#141414', colorText: '#ffffff', colorDanger: '#f87171', fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif', borderRadius: '12px' } };
+    const appearance = { theme: 'flat', variables: { colorPrimary: '#6475ff', colorBackground: '#141414', colorText: '#ffffff', colorDanger: '#f87171', fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif', borderRadius: '12px' } };
     stripeElements = stripeInstance.elements({ appearance, clientSecret });
     const expressEl = stripeElements.create('expressCheckout', { buttonHeight: 52, paymentMethods: { applePay: 'auto', googlePay: 'auto' } });
     expressEl.on('ready', ({ availablePaymentMethods }) => {
