@@ -62,17 +62,17 @@
   table { width: 100%; border-collapse: collapse; }
   thead { background: rgba(255,255,255,0.04); }
   th { padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
-  td { padding: 14px 16px; font-size: 13px; color: var(--white); border-bottom: 1px solid var(--border); vertical-align: top; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  td:last-child { max-width: none; overflow: visible; }
+  td { padding: 14px 16px; font-size: 13px; color: var(--white); border-bottom: 1px solid var(--border); vertical-align: middle; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  td:last-child { max-width: none; overflow: visible; white-space: nowrap; width: 120px; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: rgba(255,255,255,0.03); }
   .row-link { cursor: pointer; }
 
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 500; }
-  .badge-paid { background: rgba(34,197,94,0.15); color: #4ade80; }
-  .badge-paid-forced { background: rgba(100,117,255,0.2); color: #a5b4fc; }
-  .badge-pending { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
-  .badge-warn { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .badge { display: inline-block; padding: 4px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; }
+  .badge-paid { background: rgba(34,197,94,0.2); color: #4ade80; }
+  .badge-paid-forced { background: rgba(100,117,255,0.25); color: #a5b4fc; }
+  .badge-pending { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.45); }
+  .badge-warn { background: rgba(251,191,36,0.2); color: #fbbf24; }
 
   .modal-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 24px; }
   .modal-overlay.open { display: flex; }
