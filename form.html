@@ -685,7 +685,7 @@ async function saveProgress(data) {
   try {
     await fetch(API_BASE + '/submit-form', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify({ sessionId: getSessionId(), ...data })
     });
   } catch(e) { console.warn('Save failed:', e); }
 }
@@ -823,7 +823,7 @@ async function submitPayment() {
   const pi = params.get('payment_intent');
   const status = params.get('redirect_status');
   if (pi && status === 'succeeded') {
-    saveProgress({ paymentIntentId: pi, paymentStatus: 'succeeded', lastStep: 13 });
+    saveProgress({ sessionId: getSessionId(), paymentIntentId: pi, paymentStatus: 'succeeded', lastStep: 13 });
     if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: 20, currency: 'USD' });
     sessionStorage.removeItem('tmr_session');
     showStep('confirm');
