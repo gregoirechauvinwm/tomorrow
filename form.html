@@ -506,7 +506,16 @@ fbq('init','2214881865523888');fbq('track','PageView');
 const TOTAL_STEPS = 13;
 const API_BASE = '/api';
 let currentStep = 1;
-const sessionId = 'tmr_' + Math.random().toString(36).slice(2) + Date.now();
+
+function getSessionId() {
+  let id = sessionStorage.getItem('tmr_session');
+  if (!id) {
+    id = 'tmr_' + Math.random().toString(36).slice(2) + Date.now();
+    sessionStorage.setItem('tmr_session', id);
+  }
+  return id;
+}
+const sessionId = getSessionId();
 
 function showStep(s) {
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -803,6 +812,7 @@ async function submitPayment() {
     await saveProgress({ ...getFormData(), paymentIntentId: paymentIntent.id, paymentStatus: 'succeeded', lastStep: 13 });
     if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: 20, currency: 'USD' });
     if (typeof fbq !== 'undefined') fbq('track', 'CompleteRegistration');
+    sessionStorage.removeItem('tmr_session');
     showStep('confirm');
   }
 }
@@ -815,6 +825,7 @@ async function submitPayment() {
   if (pi && status === 'succeeded') {
     saveProgress({ paymentIntentId: pi, paymentStatus: 'succeeded', lastStep: 13 });
     if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: 20, currency: 'USD' });
+    sessionStorage.removeItem('tmr_session');
     showStep('confirm');
   }
 })();
